@@ -7,7 +7,7 @@ export const Poster = () => {
 
   useEffect(() => {
     // Define the API URL
-    const apiUrl = 'https://api.letterboxd.com/api/v0/film/4Y7O0h';
+    const apiUrl = 'https://letterboxd-poster-generator.netlify.app//https://api.letterboxd.com/api/v0/film/4Y7O0h';
 
     // Fetch data from the API
     fetch(apiUrl)
@@ -22,6 +22,6 @@ export const Poster = () => {
   }, []);
 
   return (
-    <div> test </div>
+    <div> CORS Anywhere </div>
   )
 }
