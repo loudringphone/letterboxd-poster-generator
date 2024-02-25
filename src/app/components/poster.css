@@ -1,10 +1,26 @@
+.diary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 img.poster {
   width: 125px;
   height: 175px;
 }
 
-.month-selector {
+.btns {
+  display: flex;
+  justify-content: space-between;
   margin-top: 25px;
+  width: 100%;
+}
+
+#password {
+  width: 125px;
+}
+#column-count {
+  text-align: center;
 }
 
 div.poster {
@@ -19,5 +35,5 @@ div.poster {
   margin-top: 25px;
   margin-bottom: 25px;
   display: grid;
-  grid-template-columns: repeat(4, 125px); 
+  grid-template-columns: repeat(4, 125px);
 }

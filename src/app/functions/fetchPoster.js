@@ -11,7 +11,6 @@ const fetchPoster = (filmName, setFilmData) => {
   fetch(url, options)
   .then(response => response.json())
   .then((response) => {
-    console.log(response)
     setFilmData(response)
   })
   .catch(err => console.error(err));

@@ -15,7 +15,6 @@ export const CSVUploader = ({ getCSV }) => {
         },
         header: true, // Assuming the CSV has a header row
       });
-      console.log('Uploaded file:', file);
     } else {
       getCSV(null)
     }

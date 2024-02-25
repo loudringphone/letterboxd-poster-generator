@@ -10,7 +10,6 @@ export default function Home() {
 
   const getCSV = (csv) => {
     setCsvData(csv)
-    console.log(csv)
   }
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
