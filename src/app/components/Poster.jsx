@@ -1,27 +1,34 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
+import fetchPoster from '../functions/fetchPoster';
+import testFilmData from '../objects/testFilmData';
 
-export const Poster = () => {
+import './poster.css';
+
+export const Poster = ({ delay, filmName }) => {
   const [filmData, setFilmData] = useState(null);
-
+  const [imageUrls, setImageUrls] = useState(null)
   useEffect(() => {
-    // Define the API URL
-    const apiUrl = 'https://letterboxd-poster-generator.netlify.app//https://api.letterboxd.com/api/v0/film/4Y7O0h';
-
-    // Fetch data from the API
-    fetch(apiUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        setFilmData(data);
-        console.log(data)
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+    setTimeout(() => {
+      fetchPoster(filmName, setFilmData)
+    }, delay * 1000);
+    // setFilmData(testFilmData)
   }, []);
 
+  useEffect(() => {
+    if (filmData) {
+      setImageUrls(filmData.d?.map(item => item.i && item.i.imageUrl).filter(Boolean));
+    }
+  }, [filmData]);
+
   return (
-    <div> CORS Anywhere </div>
-  )
+    <div className='poster'>
+      {Array.isArray(imageUrls) ? (
+        <img className="poster" src={imageUrls[0]} alt="Image" />
+      ) : (
+        <div className="poster">Loading...</div>
+      )}
+    </div>
+  );
 }

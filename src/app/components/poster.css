@@ -1,0 +1,23 @@
+img.poster {
+  width: 125px;
+  height: 175px;
+}
+
+.month-selector {
+  margin-top: 25px;
+}
+
+div.poster {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 125px;
+  height: 175px;
+}
+
+.poster-list {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  display: grid;
+  grid-template-columns: repeat(4, 125px); 
+}
