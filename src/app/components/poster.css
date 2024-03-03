@@ -40,8 +40,6 @@ div.poster {
 }
 
 #poster-list {
-  margin-top: 25px;
-  margin-bottom: 25px;
   display: grid;
   grid-template-columns: repeat(4, 37.5px);
 }
@@ -52,4 +50,13 @@ div.poster {
 
 #csv-data {
   margin-top: 16px;
+}
+
+.preview {
+  display: flex;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+.preview > label {
+  margin-right: 12px;
 }
