@@ -17,10 +17,13 @@ img.poster {
 }
 
 #password {
-  width: 125px;
+  width: 90px;
 }
 #column-count {
   text-align: center;
+}
+#poster-count {
+  width: 35px;
 }
 
 div.poster {

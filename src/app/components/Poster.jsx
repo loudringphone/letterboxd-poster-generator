@@ -12,7 +12,7 @@ export const Poster = ({ delay, filmName }) => {
   useEffect(() => {
     setTimeout(() => {
       fetchPoster(filmName, setFilmData)
-    }, delay * 1000);
+    }, delay * 1200);
     // setFilmData(testFilmData)
   }, []);
 
