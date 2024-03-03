@@ -6,12 +6,12 @@ import testFilmData from '../objects/testFilmData';
 
 import './poster.css';
 
-export const Poster = ({ delay, filmName }) => {
+export const Poster = ({ api, delay, filmName }) => {
   const [filmData, setFilmData] = useState(null);
   const [imageUrls, setImageUrls] = useState(null)
   useEffect(() => {
     setTimeout(() => {
-      fetchPoster(filmName, setFilmData)
+      fetchPoster(api,filmName, setFilmData)
     }, delay * 1500);
     // setFilmData(testFilmData)
   }, []);
