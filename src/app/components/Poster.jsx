@@ -12,7 +12,7 @@ export const Poster = ({ delay, filmName }) => {
   useEffect(() => {
     setTimeout(() => {
       fetchPoster(filmName, setFilmData)
-    }, delay * 1200);
+    }, delay * 1500);
     // setFilmData(testFilmData)
   }, []);
 
@@ -25,7 +25,7 @@ export const Poster = ({ delay, filmName }) => {
   return (
     <div className='poster'>
       {Array.isArray(imageUrls) ? (
-        <img className="poster" src={imageUrls[0]} alt="Image" />
+        <img className="poster" src={imageUrls[0]} alt="Image" crossorigin="anonymous" />
       ) : (
         <div className="poster">Loading...</div>
       )}

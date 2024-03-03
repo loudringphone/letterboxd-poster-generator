@@ -5,38 +5,51 @@
 }
 
 img.poster {
-  width: 125px;
-  height: 175px;
+  width: 37.5px;
+  height: 52.5px;
 }
 
 .btns {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   margin-top: 25px;
   width: 100%;
 }
 
+#month-selector {
+  margin-right: 24px;
+}
+
 #password {
   width: 90px;
+  margin-right: 24px;
 }
 #column-count {
   text-align: center;
 }
 #poster-count {
   width: 35px;
+  margin-right: 24px;
 }
 
 div.poster {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 125px;
-  height: 175px;
+  font-size: xx-small;
 }
 
-.poster-list {
+#poster-list {
   margin-top: 25px;
   margin-bottom: 25px;
   display: grid;
-  grid-template-columns: repeat(4, 125px);
+  grid-template-columns: repeat(4, 37.5px);
+}
+
+#canvas-btn {
+  margin-bottom: 16px;
+}
+
+#csv-data {
+  margin-top: 16px;
 }
