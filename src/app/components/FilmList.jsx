@@ -132,7 +132,7 @@ export const FilmList = ({ csvData }) => {
     context.fillRect(0, 0, canvasWidth, canvasHeight);
 
     let imageCoordinates = [];
-    
+
     let row = 0
     let column = 0
     for (let i = 0; i < visiblePosters.length; i++) {
@@ -228,10 +228,10 @@ export const FilmList = ({ csvData }) => {
             </div>
           </div>
           <div className='preview'>
-            <label htmlFor="preview">Preview: </label>
             <div id='poster-list' ref={posterListRef}>
               {api == process.env.REACT_APP_OMDB_API && selectedMonth !== 'all' && (
                 filterCSV.map((row, index) => {
+                  console.log(row.Name)
                   const date = new Date(row['Watched Date']);
                   const monthYear = `${getMonthName(date.getMonth())}${date.getFullYear().toString().slice(-2)}`;
                   if (monthYear === selectedMonth) {
