@@ -10,10 +10,10 @@ export const Poster = ({ api, delay, filmName, ManualHidden, setManualHidden }) 
   const [filmData, setFilmData] = useState(null);
   const [imageUrls, setImageUrls] = useState(null)
   useEffect(() => {
-    setTimeout(() => {
-      fetchPoster(api,filmName, setFilmData)
-    }, delay * 1000);
-    // setFilmData(testFilmData)
+    // setTimeout(() => {
+    //   fetchPoster(api,filmName, setFilmData)
+    // }, delay * 1500);
+    setFilmData(testFilmData)
   }, []);
 
   useEffect(() => {
