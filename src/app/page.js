@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState } from 'react';
-import { Poster } from './components/Poster'
 import { CSVUploader } from './components/CSVUploader'
 import { FilmList } from './components/FilmList';
 
