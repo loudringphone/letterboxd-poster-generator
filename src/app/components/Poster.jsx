@@ -22,12 +22,16 @@ export const Poster = ({ api, delay, filmName }) => {
     }
   }, [filmData]);
 
+  const handleReload = () => {
+    fetchPoster(api,filmName, setFilmData)
+  }
+
   return (
     <div className='poster'>
       {Array.isArray(imageUrls) ? (
         <img className="poster" src={imageUrls[0]} alt="Image" crossorigin="anonymous" />
       ) : (
-        <div className="poster">Loading...</div>
+        <div className="poster loading" onClick={handleReload}>Loading...</div>
       )}
     </div>
   );

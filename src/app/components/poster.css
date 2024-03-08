@@ -4,11 +4,6 @@
   align-items: center;
 }
 
-img.poster {
-  width: 37.5px;
-  height: 52.5px;
-}
-
 .btns {
   display: flex;
   justify-content: center;
@@ -32,11 +27,16 @@ img.poster {
   margin-right: 24px;
 }
 
-div.poster {
+.poster {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: xx-small;
+  width: 37.5px;
+  height: 52.5px;
+}
+.loading {
+  cursor: pointer;
 }
 
 #poster-list {
@@ -59,4 +59,8 @@ div.poster {
 }
 .preview > label {
   margin-right: 12px;
+}
+
+canvas {
+  cursor: pointer;
 }
