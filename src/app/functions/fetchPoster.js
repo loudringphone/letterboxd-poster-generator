@@ -17,7 +17,7 @@ const fetchPosterIMDb8 = (api, filmName, filmYear, setFilmData) => {
 }
 
 const fetchPoster = (api, filmName, filmYear, setFilmData) => {
-
+  console.log(api)
   const url = `https://www.omdbapi.com/?t=${filmName}&y=${filmYear}&apikey=${api}`;
   fetch(url)
   .then(response => response.json())
