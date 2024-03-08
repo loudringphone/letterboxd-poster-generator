@@ -201,7 +201,7 @@ export const FilmList = ({ csvData }) => {
               </select>
             </div>
             <div>
-              <label htmlFor="api">Rapid API: </label>
+              <label htmlFor="api">OMDb API: </label>
               <input
                 id="password"
                 type="password"
@@ -234,12 +234,12 @@ export const FilmList = ({ csvData }) => {
           <div className='preview'>
             <label htmlFor="preview">Preview: </label>
             <div id='poster-list' ref={posterListRef}>
-              {api == process.env.REACT_APP_RAPID_API && selectedMonth !== 'all' && (
+              {api == process.env.REACT_APP_OMDB_API && selectedMonth !== 'all' && (
                 filterCSV.map((row, index) => {
                   const date = new Date(row['Watched Date']);
                   const monthYear = `${getMonthName(date.getMonth())} ${date.getFullYear().toString().slice(-2)}`;
                   if (monthYear === selectedMonth) {
-                      return <Poster key={index} api={api} delay={index} filmName={`${row.Name} ${row.Year}`} manualHidden={manualHidden} setManualHidden={setManualHidden} />;
+                      return <Poster key={index} api={api} delay={index} filmName={row.Name} filmYear={row.Year} manualHidden={manualHidden} setManualHidden={setManualHidden} />;
                   } else {
                     return null;
                   }

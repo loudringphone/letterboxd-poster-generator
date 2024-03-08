@@ -6,19 +6,21 @@ import testFilmData from '../objects/testFilmData';
 
 import './poster.css';
 
-export const Poster = ({ api, delay, filmName, ManualHidden, setManualHidden }) => {
+export const Poster = ({ api, delay, filmName, filmYear, ManualHidden, setManualHidden }) => {
   const [filmData, setFilmData] = useState(null);
   const [imageUrls, setImageUrls] = useState(null)
   useEffect(() => {
     setTimeout(() => {
-      fetchPoster(api,filmName, setFilmData)
+      // fetchPosterIMDb8(api,filmName, filmYear, setFilmData)
+      fetchPoster(api,filmName, filmYear, setFilmData)
     }, delay * 1200);
     // setFilmData(testFilmData)
   }, []);
 
   useEffect(() => {
     if (filmData) {
-      setImageUrls(filmData.d?.map(item => item.i && item.i.imageUrl).filter(Boolean));
+      // setImageUrls(filmData.d?.map(item => item.i && item.i.imageUrl).filter(Boolean));
+      setImageUrls([filmData.Poster]);
     }
   }, [filmData]);
 
@@ -27,13 +29,13 @@ export const Poster = ({ api, delay, filmName, ManualHidden, setManualHidden }) 
     setManualHidden(prevCount => prevCount + 1);
   }
   const handleReload = () => {
-    fetchPoster(api,filmName, setFilmData)
+    fetchPoster(api,filmName, filmYear, setFilmData)
   }
 
   return (
     <div className='poster'>
       {Array.isArray(imageUrls) ? (
-        <img className="poster" src={imageUrls[0]} alt="Image" crossorigin="anonymous" onClick={handleDisplayNone} />
+        <img className="poster" src={imageUrls[0]} alt="Image" onClick={handleDisplayNone} />
       ) : (
         <div className="poster loading" onClick={handleReload}>Loading...</div>
       )}
