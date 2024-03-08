@@ -28,8 +28,8 @@ export const CSVUploader = ({ getCSV }) => {
   };
 
   return (
-    <div>
-      <input type="file" accept=".csv" onChange={handleFileChange} ref={fileInputRef}/>
+    <div id='csv-uploader' className='px-4'>
+      <input className='text-white' type="file" accept=".csv" onChange={handleFileChange} ref={fileInputRef}/>
       <button onClick={handleClear}>Clear</button>
     </div>
   );

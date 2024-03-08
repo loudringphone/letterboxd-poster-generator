@@ -6,7 +6,7 @@ import testFilmData from '../objects/testFilmData';
 
 import './poster.css';
 
-export const Poster = ({ api, delay, filmName, filmYear, ManualHidden, setManualHidden }) => {
+export const Poster = ({ api, delay, filmName, filmYear }) => {
   const [filmData, setFilmData] = useState(null);
   const [imageUrls, setImageUrls] = useState(null)
   useEffect(() => {
@@ -26,7 +26,6 @@ export const Poster = ({ api, delay, filmName, filmYear, ManualHidden, setManual
 
   const handleDisplayNone = (event) => {
     event.target.style.display = 'none'
-    setManualHidden(prevCount => prevCount + 1);
   }
   const handleReload = () => {
     fetchPoster(api,filmName, filmYear, setFilmData)

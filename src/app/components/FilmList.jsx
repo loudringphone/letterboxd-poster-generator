@@ -15,7 +15,7 @@ export const FilmList = ({ csvData }) => {
       const months = Array.from(
         new Set(csvData.slice(0, -1).map((row) => {
           const date = new Date(row['Watched Date']);
-          const monthYear = `${getMonthName(date.getMonth())} ${date.getFullYear().toString().slice(-2)}`;
+          const monthYear = `${getMonthName(date.getMonth())}${date.getFullYear().toString().slice(-2)}`;
           return monthYear;
         }))
       );
@@ -35,16 +35,13 @@ export const FilmList = ({ csvData }) => {
     return months[monthIndex];
   };
 
-  const [manualHidden, setManualHidden] = useState(0)
-
   useEffect(() => {
-    setManualHidden(0)
     if (selectedMonth == 'all') {
       setFilterCSV(csvData)
     } else {
       setFilterCSV(csvData.filter(((row) => {
         const date = new Date(row['Watched Date']);
-        const monthYear = `${getMonthName(date.getMonth())} ${date.getFullYear().toString().slice(-2)}`;
+        const monthYear = `${getMonthName(date.getMonth())}${date.getFullYear().toString().slice(-2)}`;
         return monthYear == selectedMonth
       })))
     }
@@ -103,7 +100,6 @@ export const FilmList = ({ csvData }) => {
       value = ''
     }
     setPosterCount(value);
-    setManualHidden(0)
     if (value != '') {
       const posters = document.querySelectorAll('img.poster');
       for (let i = 0; i < posters.length; i++) {
@@ -117,13 +113,18 @@ export const FilmList = ({ csvData }) => {
   };
 
   const generateImage = () => {
+    const posters = document.querySelectorAll('img.poster');
+    const visiblePosters = Array.from(posters).filter(p => {
+      const computedStyle = window.getComputedStyle(p);
+      return computedStyle.display !== 'none' && p.getAttribute('src');
+    });
+
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
-
     const posterWidth = 300
     const posterHeight = 420
     const canvasWidth = posterWidth * columnCount;
-    const canvasHeight = posterHeight * Math.ceil((posterCount - manualHidden) / columnCount);
+    const canvasHeight = posterHeight * Math.ceil((posterCount - (posters.length - visiblePosters.length)) / columnCount);
 
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
@@ -131,12 +132,7 @@ export const FilmList = ({ csvData }) => {
     context.fillRect(0, 0, canvasWidth, canvasHeight);
 
     let imageCoordinates = [];
-    const posters = document.querySelectorAll('img.poster');
-    const visiblePosters = Array.from(posters).filter(p => {
-      const computedStyle = window.getComputedStyle(p);
-      return computedStyle.display !== 'none';
-    });
-    console.log(visiblePosters)
+    
     let row = 0
     let column = 0
     for (let i = 0; i < visiblePosters.length; i++) {
@@ -187,11 +183,11 @@ export const FilmList = ({ csvData }) => {
     <div>
      {uniqueMonths.length > 0 ? (
         <div className='diary'>
-          <div className='btns'>
+          <div className='btns flex px-4 mt-4 justify-center'>
 
-            <div id='month-selector'>
+            <div id='month-selector' className='mr-4'>
               <label>Month: </label>
-              <select onChange={(e) => setSelectedMonth(e.target.value)}>
+              <select className='w-[70px]' onChange={(e) => setSelectedMonth(e.target.value)}>
                 <option value="all">All</option>
                 {uniqueMonths.map((month, i) => (
                   <option key={i} value={month}>
@@ -200,29 +196,29 @@ export const FilmList = ({ csvData }) => {
                 ))}
               </select>
             </div>
-            <div>
+            <div id="api" className='mr-4'>
               <label htmlFor="api">OMDb API: </label>
               <input
-                id="password"
+                className='w-20'
                 type="password"
                 value={api}
                 onChange={handleApi}
               />
             </div>
-            <div ref={posterCounter}>
+            <div id="poster-counter" className='mr-4' ref={posterCounter}>
               <label htmlFor="posterCounter">Posters: </label>
               <input
-                id="poster-counter"
+                className='w-9 text-center'
                 type="number"
                 value={posterCount}
                 onChange={handlePosterCountChange}
                 min="1"
               />
             </div>
-            <div>
+            <div id="column-counter">
               <label htmlFor="columnCount">Columns: </label>
               <input
-                id="column-count"
+                className='w-9 text-center'
                 type="number"
                 value={columnCount}
                 onChange={handleColumnCountChange}
@@ -237,9 +233,9 @@ export const FilmList = ({ csvData }) => {
               {api == process.env.REACT_APP_OMDB_API && selectedMonth !== 'all' && (
                 filterCSV.map((row, index) => {
                   const date = new Date(row['Watched Date']);
-                  const monthYear = `${getMonthName(date.getMonth())} ${date.getFullYear().toString().slice(-2)}`;
+                  const monthYear = `${getMonthName(date.getMonth())}${date.getFullYear().toString().slice(-2)}`;
                   if (monthYear === selectedMonth) {
-                      return <Poster key={index} api={api} delay={index} filmName={row.Name} filmYear={row.Year} manualHidden={manualHidden} setManualHidden={setManualHidden} />;
+                      return <Poster key={index} api={api} delay={index} filmName={row.Name} filmYear={row.Year} />;
                   } else {
                     return null;
                   }
@@ -248,11 +244,11 @@ export const FilmList = ({ csvData }) => {
             </div>
           </div>
 
-          <button id='canvas-btn' onClick={generateImage}>Click Here to Generate Image</button>
-          <canvas ref={canvasRef} onClick={downloadImage} />
+          <button id='canvas-btn' className='mb-4' onClick={generateImage}>Click Here to Generate Image</button>
+          <canvas ref={canvasRef} onClick={downloadImage} className='mb-4' />
 
 
-          <div id='csv-data'>
+          <div id='csv-data' className='px-4 '>
             <p>CSV data:</p>
             <table>
               <thead>

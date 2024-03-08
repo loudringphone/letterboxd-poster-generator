@@ -4,27 +4,9 @@
   align-items: center;
 }
 
-.btns {
-  display: flex;
-  justify-content: center;
-  margin-top: 25px;
-  width: 100%;
-}
-
-#month-selector {
-  margin-right: 24px;
-}
-
-#password {
-  width: 90px;
-  margin-right: 24px;
-}
-#column-count {
-  text-align: center;
-}
-#poster-counter {
-  width: 35px;
-  margin-right: 24px;
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
 }
 
 .poster {
@@ -42,10 +24,6 @@
 #poster-list {
   display: grid;
   grid-template-columns: repeat(4, 37.5px);
-}
-
-#canvas-btn {
-  margin-bottom: 16px;
 }
 
 #csv-data {
