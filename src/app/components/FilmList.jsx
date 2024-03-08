@@ -231,7 +231,6 @@ export const FilmList = ({ csvData }) => {
             <div id='poster-list' ref={posterListRef}>
               {api == process.env.REACT_APP_OMDB_API && selectedMonth !== 'all' && (
                 filterCSV.map((row, index) => {
-                  console.log(row.Name)
                   const date = new Date(row['Watched Date']);
                   const monthYear = `${getMonthName(date.getMonth())}${date.getFullYear().toString().slice(-2)}`;
                   if (monthYear === selectedMonth) {
