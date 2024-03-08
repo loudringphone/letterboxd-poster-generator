@@ -6,14 +6,14 @@ import testFilmData from '../objects/testFilmData';
 
 import './poster.css';
 
-export const Poster = ({ api, delay, filmName, ManualHidden, setManualHidden }) => {
+export const Poster = ({ api, delay, filmName }) => {
   const [filmData, setFilmData] = useState(null);
   const [imageUrls, setImageUrls] = useState(null)
   useEffect(() => {
-    // setTimeout(() => {
-    //   fetchPoster(api,filmName, setFilmData)
-    // }, delay * 1500);
-    setFilmData(testFilmData)
+    setTimeout(() => {
+      fetchPoster(api,filmName, setFilmData)
+    }, delay * 1500);
+    // setFilmData(testFilmData)
   }, []);
 
   useEffect(() => {
@@ -22,10 +22,6 @@ export const Poster = ({ api, delay, filmName, ManualHidden, setManualHidden }) 
     }
   }, [filmData]);
 
-  const handleDisplayNone = (event) => {
-    event.target.style.display = 'none'
-    setManualHidden(prevCount => prevCount + 1);
-  }
   const handleReload = () => {
     fetchPoster(api,filmName, setFilmData)
   }
@@ -33,7 +29,7 @@ export const Poster = ({ api, delay, filmName, ManualHidden, setManualHidden }) 
   return (
     <div className='poster'>
       {Array.isArray(imageUrls) ? (
-        <img className="poster" src={imageUrls[0]} alt="Image" crossorigin="anonymous" onClick={handleDisplayNone} />
+        <img className="poster" src={imageUrls[0]} alt="Image" crossorigin="anonymous" />
       ) : (
         <div className="poster loading" onClick={handleReload}>Loading...</div>
       )}
