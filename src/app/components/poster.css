@@ -63,4 +63,6 @@
 
 canvas {
   cursor: pointer;
+  max-width: 100%;
+  height: auto;
 }

@@ -256,7 +256,7 @@ export const FilmList = ({ csvData }) => {
             <p>CSV data:</p>
             <table>
               <thead>
-                <tr>
+                <tr className='text-left'>
                   <th>Date</th>
                   <th>Name</th>
                   <th>Year</th>
@@ -264,7 +264,7 @@ export const FilmList = ({ csvData }) => {
               </thead>
               <tbody>
                 {filterCSV.map((row, index) => (
-                  <tr key={index}>
+                  <tr key={index} className='border-t-2 border-dashed'>
                     <td>{row['Watched Date']}</td>
                     <td>{row.Name}</td>
                     <td>{row.Year}</td>

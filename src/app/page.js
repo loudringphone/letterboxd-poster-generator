@@ -12,11 +12,11 @@ export default function Home() {
     setCsvData(csv)
   }
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="flex flex-col z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
+    <main className='flex flex-col p-4  w-full items-center justify-between font-mono text-sm lg:flex'>
+        <h1 className='text-lg text-center'>Letterboxd Diary Film Poster</h1>
+        <h1 className='text-lg text-center mb-4'>Generator</h1>
         <CSVUploader getCSV={getCSV}/>
         <FilmList csvData={csvData}/>
-      </div>
     </main>
   )
 }
