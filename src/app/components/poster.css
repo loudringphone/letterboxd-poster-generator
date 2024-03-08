@@ -22,13 +22,13 @@
 #column-count {
   text-align: center;
 }
-#poster-count {
+#poster-counter {
   width: 35px;
   margin-right: 24px;
 }
 
 .poster {
-  display: flex;
+  display: block;
   justify-content: center;
   align-items: center;
   font-size: xx-small;
