@@ -17,30 +17,14 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 37.5px;
   height: 52.5px;
 }
-.loading {
-  cursor: pointer;
-}
 
 #poster-list {
   display: grid;
   grid-template-columns: repeat(4, 37.5px);
 }
 
-#csv-data {
-  margin-top: 16px;
-}
-
 .preview {
   display: flex;
   margin-top: 25px;
   margin-bottom: 25px;
-}
-.preview > label {
-  margin-right: 12px;
-}
-
-canvas {
-  cursor: pointer;
-  max-width: 100%;
-  height: auto;
 }

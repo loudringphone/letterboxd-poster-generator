@@ -1,9 +1,9 @@
-const fetchPosterIMDb8 = (api, filmName, filmYear, setFilmData) => {
+const fetchPosterIMDb8 = (iMDb8Api, filmName, filmYear, setFilmData) => {
   const url = `https://imdb8.p.rapidapi.com/auto-complete?q=${filmName} ${filmYear}`;
   const options = {
     method: 'GET',
     headers: {
-      'X-RapidAPI-Key': api,
+      'X-RapidAPI-Key': iMDb8Api,
       'X-RapidAPI-Host': 'imdb8.p.rapidapi.com'
     }
   };
@@ -16,15 +16,15 @@ const fetchPosterIMDb8 = (api, filmName, filmYear, setFilmData) => {
   .catch(err => console.error(err));
 }
 
-const fetchPoster = (api, filmName, filmYear, setFilmData) => {
-  const url = `https://www.omdbapi.com/?t=${filmName}&y=${filmYear}&apikey=${api}`;
+const fetchPoster = (oMDbapi, iMDb8Api, filmName, filmYear, setFilmData) => {
+  const url = `https://www.omdbapi.com/?t=${filmName}&y=${filmYear}&apikey=${oMDbapi}`;
   fetch(url)
   .then(response => response.json())
   .then((response) => {
     if (!response.Error)
       setFilmData(response)
     else {
-      fetchPosterIMDb8(process.env.REACT_APP_RAPID_API, filmName, filmYear, setFilmData)
+      fetchPosterIMDb8(iMDb8Api, filmName, filmYear, setFilmData)
     }
   })
   .catch(err => console.error(err));

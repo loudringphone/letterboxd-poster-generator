@@ -5,28 +5,9 @@ import { Poster } from './Poster';
 import './poster.css';
 
 export const FilmList = ({ csvData }) => {
-  const [filterCSV, setFilterCSV] = useState(csvData)
+  const [filteredCSV, setFilteredCSV] = useState(csvData)
   const [selectedMonth, setSelectedMonth] = useState('all');
   const [uniqueMonths, setUniqueMonths] = useState([]);
-
-  useEffect(() => {
-    if (csvData) {
-      setFilterCSV(csvData)
-      const months = Array.from(
-        new Set(csvData.slice(0, -1).map((row) => {
-          const date = new Date(row['Watched Date']);
-          const monthYear = `${getMonthName(date.getMonth())}${date.getFullYear().toString().slice(-2)}`;
-          return monthYear;
-        }))
-      );
-      setUniqueMonths(months);
-    } else {
-      setFilterCSV(null)
-      setUniqueMonths([]);
-    }
-    setSelectedMonth('all')
-  }, [csvData]);
-
   const getMonthName = (monthIndex) => {
     const months = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -35,17 +16,43 @@ export const FilmList = ({ csvData }) => {
     return months[monthIndex];
   };
 
-  useEffect(() => {
-    if (selectedMonth == 'all') {
-      setFilterCSV(csvData)
+  const filterMonth = (row, selectedMonth) => {
+    const date = new Date(row['Watched Date']);
+    const monthYear = `${getMonthName(date.getMonth())}${date.getFullYear().toString().slice(-2)}`;
+    if (selectedMonth) {
+      return monthYear === selectedMonth;
     } else {
-      setFilterCSV(csvData.filter(((row) => {
-        const date = new Date(row['Watched Date']);
-        const monthYear = `${getMonthName(date.getMonth())}${date.getFullYear().toString().slice(-2)}`;
-        return monthYear == selectedMonth
-      })))
+      return monthYear
     }
-  }, [selectedMonth]);
+  }
+
+  useEffect(() => {
+    if (csvData) {
+      setFilteredCSV(csvData)
+      const months = Array.from(
+        new Set(csvData.slice(0, -1).map((row) => {
+          return filterMonth(row)
+        }))
+      );
+      setUniqueMonths(months);
+      if (selectedMonth !== 'all') {
+        setFilteredCSV(csvData.filter(((row) => {
+          return filterMonth(row, selectedMonth)
+        })))
+      }
+    } else {
+      setFilteredCSV(null)
+      setUniqueMonths([]);
+      setSelectedMonth('all')
+    }
+  }, [csvData, selectedMonth]);
+
+  const [visiblePostersCount, setVisiblePostersCount] = useState(0)
+  useEffect(() => {
+    if (filteredCSV) {
+      setVisiblePostersCount(filteredCSV.length)
+    }
+  }, [filteredCSV])
 
   const [columnCount, setColumnCount] = useState(4);
   const posterListRef = useRef(null);
@@ -62,27 +69,24 @@ export const FilmList = ({ csvData }) => {
     }
   }, [columnCount])
 
-  const [api, setApi] = useState('');
+const [oMDbApi, setOMDbApi] = useState('');
+const [iMDb8Api, setIMDb8Api] = useState('');
 
-  const handleApi = (event) => {
-    setApi(event.target.value)
+  const handleOMDbApi = (event) => {
+    setOMDbApi(event.target.value)
+  }
+  const handleIMDb8Api = (event) => {
+    setIMDb8Api(event.target.value)
   }
 
   const canvasRef = useRef(null);
-  const [posterCount, setPosterCount] = useState(0);
-  const posterCounter = useRef(null)
   useEffect(() => {
-    const posterCounterElement = posterCounter.current
-    if (posterCounterElement && filterCSV && selectedMonth != 'all') {
-      setPosterCount(filterCSV.length)
-      posterCounterElement.style.visibility = 'visible'
-      if (filterCSV.length < 4) {
-        setColumnCount(filterCSV.length)
+    if (filteredCSV && selectedMonth != 'all') {
+      if (filteredCSV.length < 4) {
+        setColumnCount(filteredCSV.length)
       } else {
         setColumnCount(4)
       }
-    } else if (posterCounterElement) {
-      posterCounterElement.style.visibility = 'hidden'
     }
     const canvas = canvasRef.current;
     if (canvas) {
@@ -91,26 +95,7 @@ export const FilmList = ({ csvData }) => {
       const context = canvas.getContext('2d');
       context.clearRect(0, 0, 0, 0);
     }
-  }, [filterCSV])
-  const handlePosterCountChange = (event) => {
-    let value = parseInt(event.target.value)
-    if (selectedMonth != 'all' && value > filterCSV.length) {
-      value = filterCSV.length
-    } else if (selectedMonth == 'all') {
-      value = ''
-    }
-    setPosterCount(value);
-    if (value != '') {
-      const posters = document.querySelectorAll('img.poster');
-      for (let i = 0; i < posters.length; i++) {
-        if (i < value) {
-          posters[i].style.display = 'block'
-        } else {
-          posters[i].style.display = 'none'
-        }
-      }
-    }
-  };
+  }, [filteredCSV])
 
   const generateImage = () => {
     const posters = document.querySelectorAll('img.poster');
@@ -124,7 +109,7 @@ export const FilmList = ({ csvData }) => {
     const posterWidth = 300
     const posterHeight = 420
     const canvasWidth = posterWidth * columnCount;
-    const canvasHeight = posterHeight * Math.ceil((posterCount - (posters.length - visiblePosters.length)) / columnCount);
+    const canvasHeight = posterHeight * Math.ceil((visiblePosters.length) / columnCount);
 
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
@@ -184,10 +169,29 @@ export const FilmList = ({ csvData }) => {
      {uniqueMonths.length > 0 ? (
         <div className='diary'>
           <div className='btns flex px-4 mt-4 justify-center'>
-
+            <div id="OMDbApi" className='mr-4'>
+              <label htmlFor="OMDbApi">OMDb API: </label>
+              <input
+                className='w-20'
+                type="password"
+                value={oMDbApi}
+                onChange={handleOMDbApi}
+              />
+            </div>
+            <div id="IMDb8api">
+              <label htmlFor="IMDb8api" className='text-nowrap'>IMDb8 API: </label>
+              <input
+                className='w-20'
+                type="password"
+                value={iMDb8Api}
+                onChange={handleIMDb8Api}
+              />
+            </div>
+          </div>
+          <div className='btns flex px-4 mt-4 justify-center'>
             <div id='month-selector' className='mr-4'>
-              <label>Month: </label>
-              <select className='w-[70px]' onChange={(e) => setSelectedMonth(e.target.value)}>
+              <label htmlFor="monthSelector" className='text-nowrap'>Month: </label>
+              <select className='w-[65px]' onChange={(e) => setSelectedMonth(e.target.value)}>
                 <option value="all">All</option>
                 {uniqueMonths.map((month, i) => (
                   <option key={i} value={month}>
@@ -196,27 +200,8 @@ export const FilmList = ({ csvData }) => {
                 ))}
               </select>
             </div>
-            <div id="api" className='mr-4'>
-              <label htmlFor="api">OMDb API: </label>
-              <input
-                className='w-20'
-                type="password"
-                value={api}
-                onChange={handleApi}
-              />
-            </div>
-            <div id="poster-counter" className='mr-4' ref={posterCounter}>
-              <label htmlFor="posterCounter">Posters: </label>
-              <input
-                className='w-9 text-center'
-                type="number"
-                value={posterCount}
-                onChange={handlePosterCountChange}
-                min="1"
-              />
-            </div>
-            <div id="column-counter">
-              <label htmlFor="columnCount">Columns: </label>
+            <div id="column-counter" className='mr-4'>
+              <label htmlFor="columnCounter" className='text-nowrap'>Cols: </label>
               <input
                 className='w-9 text-center'
                 type="number"
@@ -226,15 +211,18 @@ export const FilmList = ({ csvData }) => {
                 max="10"
               />
             </div>
+            <div id="poster-counter">
+              <p>{selectedMonth == 'all' || oMDbApi !== process.env.REACT_APP_OMDB_API || iMDb8Api !== process.env.REACT_APP_IMDB8_API  ? 'Films' : 'Posts'}: <span> {visiblePostersCount} </span> </p>
+            </div>
           </div>
           <div className='preview'>
             <div id='poster-list' ref={posterListRef}>
-              {api == process.env.REACT_APP_OMDB_API && selectedMonth !== 'all' && (
-                filterCSV.map((row, index) => {
+              {oMDbApi == process.env.REACT_APP_OMDB_API && iMDb8Api == process.env.REACT_APP_IMDB8_API  && selectedMonth !== 'all' && (
+                filteredCSV.map((row, index) => {
                   const date = new Date(row['Watched Date']);
                   const monthYear = `${getMonthName(date.getMonth())}${date.getFullYear().toString().slice(-2)}`;
                   if (monthYear === selectedMonth) {
-                      return <Poster key={index} api={api} delay={index} filmName={row.Name} filmYear={row.Year} />;
+                      return <Poster key={index} oMDbApi={oMDbApi} iMDb8Api={iMDb8Api} delay={index} filmName={row.Name} filmYear={row.Year} setVisiblePostersCount={setVisiblePostersCount} />;
                   } else {
                     return null;
                   }
@@ -244,25 +232,25 @@ export const FilmList = ({ csvData }) => {
           </div>
 
           <button id='canvas-btn' className='mb-4' onClick={generateImage}>Click Here to Generate Image</button>
-          <canvas ref={canvasRef} onClick={downloadImage} className='mb-4' />
+          <canvas ref={canvasRef} onClick={downloadImage} className='w-[100%] h-[auto] cursor-pointer mb-4' />
 
 
           <div id='csv-data' className='px-4 '>
             <p>CSV data:</p>
-            <table>
+            <table className='border-spacing-x-4'>
               <thead>
                 <tr className='text-left'>
-                  <th>Date</th>
-                  <th>Name</th>
-                  <th>Year</th>
+                  <th className='pr-3 py-1'>Date</th>
+                  <th className='pr-3 py-1'>Name</th>
+                  <th className='pr-3 py-1'>Year</th>
                 </tr>
               </thead>
               <tbody>
-                {filterCSV.map((row, index) => (
+                {filteredCSV.map((row, index) => (
                   <tr key={index} className='border-t-2 border-dashed'>
-                    <td>{row['Watched Date']}</td>
-                    <td>{row.Name}</td>
-                    <td>{row.Year}</td>
+                    <td className='pr-3 py-1'>{row['Watched Date']}</td>
+                    <td className='pr-3 py-1'>{row.Name}</td>
+                    <td className='pr-3 py-1'>{row.Year}</td>
                   </tr>
                 ))}
               </tbody>
