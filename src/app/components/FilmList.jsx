@@ -173,7 +173,8 @@ const [iMDb8Api, setIMDb8Api] = useState('');
               <label htmlFor="OMDbApi">OMDb API: </label>
               <input
                 className='w-20'
-                type="password"
+                type="text"
+                autocomplete='on'
                 value={oMDbApi}
                 onChange={handleOMDbApi}
               />
@@ -182,7 +183,8 @@ const [iMDb8Api, setIMDb8Api] = useState('');
               <label htmlFor="IMDb8api" className='text-nowrap'>IMDb8 API: </label>
               <input
                 className='w-20'
-                type="password"
+                type="text"
+                autocomplete='on'
                 value={iMDb8Api}
                 onChange={handleIMDb8Api}
               />
