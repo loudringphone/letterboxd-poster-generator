@@ -73,10 +73,20 @@ const [oMDbApi, setOMDbApi] = useState('');
 const [iMDb8Api, setIMDb8Api] = useState('');
 
   const handleOMDbApi = (event) => {
-    setOMDbApi(event.target.value)
+    const value = event.target.value
+    if (value === process.env.PASSCODE) {
+      setOMDbApi(process.env.REACT_APP_OMDB_API)
+    } else {
+      setOMDbApi(value)
+    }
   }
   const handleIMDb8Api = (event) => {
-    setIMDb8Api(event.target.value)
+    const value = event.target.value
+    if (value === process.env.PASSCODE) {
+      setIMDb8Api(process.env.REACT_APP_IMDB8_API)
+    } else {
+      setIMDb8Api(value)
+    }
   }
 
   const canvasRef = useRef(null);

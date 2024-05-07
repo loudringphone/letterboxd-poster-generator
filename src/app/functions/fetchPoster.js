@@ -1,4 +1,5 @@
 const fetchPosterIMDb8 = (iMDb8Api, filmName, filmYear, setFilmData) => {
+  console.log(iMDb8Api)
   const url = `https://imdb8.p.rapidapi.com/auto-complete?q=${filmName} ${filmYear}`;
   const options = {
     method: 'GET',
