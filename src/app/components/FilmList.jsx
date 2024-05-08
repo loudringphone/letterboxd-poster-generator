@@ -69,24 +69,28 @@ export const FilmList = ({ csvData }) => {
     }
   }, [columnCount])
 
-const [oMDbApi, setOMDbApi] = useState('');
-const [iMDb8Api, setIMDb8Api] = useState('');
 
-  const handleOMDbApi = (event) => {
-    const value = event.target.value
-    if (value === process.env.REACT_APP_PASSCODE) {
+  const oMDbApiRef = useRef(null);
+  const iMDb8ApiRef = useRef(null);
+  const [oMDbApi, setOMDbApi] = useState(null);
+  const [iMDb8Api, setIMDb8Api] = useState(null);
+
+  const confirmAPIs = () => {
+    const oMDbApiVal = oMDbApiRef.current.value
+    console.log(oMDbApiRef)
+    console.log(oMDbApiVal)
+    const iMDb8ApiVal = iMDb8ApiRef.current.value
+    if (oMDbApiVal === process.env.REACT_APP_PASSCODE) {
       setOMDbApi(process.env.REACT_APP_OMDB_API)
     } else {
-      setOMDbApi(value)
+      setOMDbApi(oMDbApiVal)
     }
-  }
-  const handleIMDb8Api = (event) => {
-    const value = event.target.value
-    if (value === process.env.REACT_APP_PASSCODE) {
+    if (iMDb8ApiVal === process.env.REACT_APP_PASSCODE) {
       setIMDb8Api(process.env.REACT_APP_IMDB8_API)
     } else {
-      setIMDb8Api(value)
+      setIMDb8Api(iMDb8ApiVal)
     }
+
   }
 
   const canvasRef = useRef(null);
@@ -184,9 +188,7 @@ const [iMDb8Api, setIMDb8Api] = useState('');
               <input
                 className='w-20'
                 type="password"
-                autocomplete='on'
-                value={oMDbApi}
-                onChange={handleOMDbApi}
+                ref={oMDbApiRef}
               />
             </div>
             <div id="IMDb8api">
@@ -194,9 +196,7 @@ const [iMDb8Api, setIMDb8Api] = useState('');
               <input
                 className='w-20'
                 type="password"
-                autocomplete='on'
-                value={iMDb8Api}
-                onChange={handleIMDb8Api}
+                ref={iMDb8ApiRef}
               />
             </div>
           </div>
@@ -224,12 +224,15 @@ const [iMDb8Api, setIMDb8Api] = useState('');
               />
             </div>
             <div id="poster-counter">
-              <p>{selectedMonth == 'all' || oMDbApi !== process.env.REACT_APP_OMDB_API || iMDb8Api !== process.env.REACT_APP_IMDB8_API  ? 'Films' : 'Posts'}: <span> {visiblePostersCount} </span> </p>
+              <p>{selectedMonth == 'all' || oMDbApi == null || iMDb8Api == null  ? 'Films' : 'Posts'}: <span> {visiblePostersCount} </span> </p>
             </div>
           </div>
+
+          <button className='mt-4' onClick={confirmAPIs}>Click Here to confrim API keys</button>
+
           <div className='preview'>
             <div id='poster-list' ref={posterListRef}>
-              {oMDbApi == process.env.REACT_APP_OMDB_API && iMDb8Api == process.env.REACT_APP_IMDB8_API  && selectedMonth !== 'all' && (
+              {oMDbApi !== null && iMDb8Api !== null  && selectedMonth !== 'all' && (
                 filteredCSV.map((row, index) => {
                   const date = new Date(row['Watched Date']);
                   const monthYear = `${getMonthName(date.getMonth())}${date.getFullYear().toString().slice(-2)}`;
