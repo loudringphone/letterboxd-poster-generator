@@ -120,8 +120,8 @@ export const FilmList = ({ csvData }) => {
 
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
-    const posterWidth = 260
-    const posterHeight = 385
+    const posterWidth = 230
+    const posterHeight = 345
     const gap = 15
     const canvasWidth = posterWidth * columnCount + gap * (columnCount + 1);
     const rowCount = Math.ceil((visiblePosters.length) / columnCount)
@@ -148,7 +148,7 @@ export const FilmList = ({ csvData }) => {
       column = column + 1
     }
 
-    const borderRadius = 6;
+    const borderRadius = 8;
     const borderColor = '#89a';
     const boxShadowColor = 'rgba(20, 24, 28, 0.125)';
     const borderWidth = 1;
