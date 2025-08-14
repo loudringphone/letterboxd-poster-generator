@@ -16,11 +16,13 @@ input[type="number"]::-webkit-outer-spin-button {
   font-size: xx-small;
   width: 37.5px;
   height: 52.5px;
+  border-radius: 1px;
 }
 
 #poster-list {
   display: grid;
   grid-template-columns: repeat(4, 37.5px);
+  gap: 2px;
 }
 
 .preview {

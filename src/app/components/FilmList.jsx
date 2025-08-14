@@ -120,10 +120,12 @@ export const FilmList = ({ csvData }) => {
 
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
-    const posterWidth = 300
-    const posterHeight = 420
-    const canvasWidth = posterWidth * columnCount;
-    const canvasHeight = posterHeight * Math.ceil((visiblePosters.length) / columnCount);
+    const posterWidth = 260
+    const posterHeight = 385
+    const gap = 15
+    const canvasWidth = posterWidth * columnCount + gap * (columnCount + 1);
+    const rowCount = Math.ceil((visiblePosters.length) / columnCount)
+    const canvasHeight = posterHeight * rowCount + gap * (rowCount + 1);
 
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
@@ -140,18 +142,64 @@ export const FilmList = ({ csvData }) => {
         column = 0
       }
       const src = visiblePosters[i].src
-      const x = column * posterWidth
-      const y = row * posterHeight
+      const x = gap + column * (posterWidth + gap);
+      const y = gap + row * (posterHeight + gap);
       imageCoordinates.push({ src: src, x: x, y: y})
       column = column + 1
     }
 
+    const borderRadius = 6;
+    const borderColor = '#89a';
+    const boxShadowColor = 'rgba(20, 24, 28, 0.125)';
+    const borderWidth = 1;
     const promises = imageCoordinates.map(({ src, x, y }) => {
       return new Promise((resolve, reject) => {
         const img = new Image();
-        img.crossOrigin = 'anonymous'
+        img.crossOrigin = 'anonymous';
         img.onload = () => {
+          context.save();
+
+          // Rounded rectangle path
+          context.beginPath();
+          context.moveTo(x + borderRadius, y);
+          context.lineTo(x + posterWidth - borderRadius, y);
+          context.quadraticCurveTo(x + posterWidth, y, x + posterWidth, y + borderRadius);
+          context.lineTo(x + posterWidth, y + posterHeight - borderRadius);
+          context.quadraticCurveTo(x + posterWidth, y + posterHeight, x + posterWidth - borderRadius, y + posterHeight);
+          context.lineTo(x + borderRadius, y + posterHeight);
+          context.quadraticCurveTo(x, y + posterHeight, x, y + posterHeight - borderRadius);
+          context.lineTo(x, y + borderRadius);
+          context.quadraticCurveTo(x, y, x + borderRadius, y);
+          context.closePath();
+
+          // Clip image
+          context.clip();
           context.drawImage(img, x, y, posterWidth, posterHeight);
+          context.restore();
+
+          // Draw border
+          context.beginPath();
+          context.moveTo(x + borderRadius, y);
+          context.lineTo(x + posterWidth - borderRadius, y);
+          context.quadraticCurveTo(x + posterWidth, y, x + posterWidth, y + borderRadius);
+          context.lineTo(x + posterWidth, y + posterHeight - borderRadius);
+          context.quadraticCurveTo(x + posterWidth, y + posterHeight, x + posterWidth - borderRadius, y + posterHeight);
+          context.lineTo(x + borderRadius, y + posterHeight);
+          context.quadraticCurveTo(x, y + posterHeight, x, y + posterHeight - borderRadius);
+          context.lineTo(x, y + borderRadius);
+          context.quadraticCurveTo(x, y, x + borderRadius, y);
+          context.closePath();
+
+          // Shadow effect (simulated inset)
+          context.shadowColor = boxShadowColor;
+          context.shadowBlur = 0;
+          context.shadowOffsetX = 0;
+          context.shadowOffsetY = 0;
+
+          context.strokeStyle = borderColor;
+          context.lineWidth = borderWidth;
+          context.stroke();
+
           resolve();
         };
         img.onerror = () => reject(`Failed to load image: ${src}`);
@@ -160,13 +208,6 @@ export const FilmList = ({ csvData }) => {
     });
 
     Promise.all(promises)
-        // .then(() => {
-        //     const imageDataURL = canvas.toDataURL();
-        //     console.log(imageDataURL);
-        // })
-        // .catch(error => {
-        //     console.error(error);
-        // });
   };
 
   const downloadImage = (event) => {
