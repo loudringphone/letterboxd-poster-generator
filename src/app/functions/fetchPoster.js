@@ -1,6 +1,6 @@
 const fetchPosterIMDb8 = (iMDb8Api, filmName, filmYear, setFilmData) => {
-  console.log(iMDb8Api)
-  const url = `https://imdb8.p.rapidapi.com/auto-complete?q=${filmName} ${filmYear}`;
+  const query = encodeURIComponent(`${filmName} ${filmYear}`);
+  const url = `https://imdb8.p.rapidapi.com/auto-complete?q=${query}`;
   const options = {
     method: 'GET',
     headers: {
@@ -11,7 +11,7 @@ const fetchPosterIMDb8 = (iMDb8Api, filmName, filmYear, setFilmData) => {
   fetch(url, options)
   .then(response => response.json())
   .then((response) => {
-    const filmData = {Poster: response.d?.map(item => item.i && item.i.imageUrl).filter(Boolean)}
+    const filmData = {Title: filmName, Year: filmYear, Poster: response.d?.map(item => item.i && item.i.imageUrl).filter(Boolean)}
     setFilmData(filmData)
   })
   .catch(err => console.error(err));

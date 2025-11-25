@@ -77,8 +77,6 @@ export const FilmList = ({ csvData }) => {
 
   const confirmAPIs = () => {
     const oMDbApiVal = oMDbApiRef.current.value
-    console.log(oMDbApiRef)
-    console.log(oMDbApiVal)
     const iMDb8ApiVal = iMDb8ApiRef.current.value
     if (oMDbApiVal === process.env.REACT_APP_PASSCODE) {
       setOMDbApi(process.env.REACT_APP_OMDB_API)
@@ -215,7 +213,7 @@ export const FilmList = ({ csvData }) => {
     const dataURL = canvas.toDataURL('image/png');
     const downloadLink = document.createElement('a');
     downloadLink.href = dataURL;
-    downloadLink.download = 'canvas_image.png';
+    downloadLink.download = selectedMonth + '.png';
     downloadLink.click();
   }
 

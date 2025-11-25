@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import fetchPoster from '../functions/fetchPoster';
-import testFilmData from '../objects/testFilmData';
 
 import './poster.css';
 
@@ -12,15 +11,19 @@ export const Poster = ({ oMDbApi, iMDb8Api, delay, filmName, filmYear, setVisibl
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     setTimeout(() => {
-      // fetchPosterIMDb8(api,filmName, filmYear, setFilmData)
       fetchPoster(oMDbApi, iMDb8Api, filmName, filmYear, setFilmData)
     }, delay * 1200);
-    // setFilmData(testFilmData)
   }, []);
 
   useEffect(() => {
     if (filmData) {
-      setImageUrls([filmData.Poster]);
+      if (Array.isArray(filmData.Poster)) {
+        // console.log(filmData)
+        setImageUrls(filmData.Poster);
+      }
+      else {
+        setImageUrls([filmData.Poster]);
+      }
       setLoading(false)
     }
   }, [filmData]);
@@ -48,7 +51,7 @@ export const Poster = ({ oMDbApi, iMDb8Api, delay, filmName, filmYear, setVisibl
   return (
     <div className='poster cursor-pointer' onClick={handleDisplay} >
       {Array.isArray(imageUrls) ? (
-        <img className="poster" src={imageUrls[0]} alt="Image" />
+        <img className="poster" srcset={imageUrls.join(", ")} alt="Image" />
       ) : (
         <div className="loading" onClick={handleReload}>Loading...</div>
       )}
