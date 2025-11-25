@@ -80,15 +80,17 @@ export const FilmList = ({ csvData }) => {
     const iMDb8ApiVal = iMDb8ApiRef.current.value
     if (oMDbApiVal === process.env.REACT_APP_PASSCODE) {
       setOMDbApi(process.env.REACT_APP_OMDB_API)
+      setIMDb8Api(process.env.REACT_APP_IMDB8_API)
     } else {
       setOMDbApi(oMDbApiVal)
     }
     if (iMDb8ApiVal === process.env.REACT_APP_PASSCODE) {
       setIMDb8Api(process.env.REACT_APP_IMDB8_API)
+      setOMDbApi(process.env.REACT_APP_OMDB_API)
     } else {
       setIMDb8Api(iMDb8ApiVal)
     }
-
+    setVisiblePostersCount(filteredCSV.length)
   }
 
   const canvasRef = useRef(null);
@@ -276,7 +278,17 @@ export const FilmList = ({ csvData }) => {
                   const date = new Date(row['Watched Date']);
                   const monthYear = `${getMonthName(date.getMonth())}${date.getFullYear().toString().slice(-2)}`;
                   if (monthYear === selectedMonth) {
-                      return <Poster key={index} oMDbApi={oMDbApi} iMDb8Api={iMDb8Api} delay={index} filmName={row.Name} filmYear={row.Year} setVisiblePostersCount={setVisiblePostersCount} />;
+                      return (
+                        <Poster
+                          key={`${index}-${oMDbApi}-${iMDb8Api}`}
+                          oMDbApi={oMDbApi}
+                          iMDb8Api={iMDb8Api}
+                          delay={index}
+                          filmName={row.Name}
+                          filmYear={row.Year}
+                          setVisiblePostersCount={setVisiblePostersCount}
+                        />
+                      );
                   } else {
                     return null;
                   }
