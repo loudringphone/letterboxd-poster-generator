@@ -270,7 +270,7 @@ export const FilmList = ({ csvData }) => {
             </div>
           </div>
 
-          <button className='mt-4 hover:bg-gray-200 hover:text-gray-500 active:bg-gray-500 active:text-gray-200 focus:outline-none' onClick={confirmAPIs}>Click Here to confrim API keys</button>
+          <button className='mt-4 px-1 hover:bg-gray-200 hover:text-gray-500 active:bg-gray-500 active:text-gray-200 focus:outline-none' onClick={confirmAPIs}>Click Here to confrim API keys</button>
 
           <div className='preview'>
             <div id='poster-list' ref={posterListRef}>
@@ -298,7 +298,7 @@ export const FilmList = ({ csvData }) => {
             </div>
           </div>
 
-          <button id='canvas-btn' className='mb-4 hover:bg-gray-200 hover:text-gray-500 active:bg-gray-500 active:text-gray-200 focus:outline-none' onClick={generateImage}>Click Here to Generate Image</button>
+          <button id='canvas-btn' className='mb-4 px-1 hover:bg-gray-200 hover:text-gray-500 active:bg-gray-500 active:text-gray-200 focus:outline-none' onClick={generateImage}>Click Here to Generate Image</button>
           <canvas ref={canvasRef} onClick={downloadImage} className='w-[100%] h-[auto] cursor-pointer mb-4' />
 
 
