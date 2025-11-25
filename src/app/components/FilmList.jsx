@@ -113,7 +113,7 @@ export const FilmList = ({ csvData }) => {
     const posters = document.querySelectorAll('img.poster');
     const visiblePosters = Array.from(posters).filter(p => {
       const computedStyle = window.getComputedStyle(p);
-      return computedStyle.display !== 'none' && p.getAttribute('src');
+      return computedStyle.display !== 'none' && p.getAttribute('srcSet');
     });
 
     const canvas = canvasRef.current;
@@ -139,10 +139,10 @@ export const FilmList = ({ csvData }) => {
         row = row + 1
         column = 0
       }
-      const src = visiblePosters[i].src
+      const srcSet = visiblePosters[i].srcset
       const x = gap + column * (posterWidth + gap);
       const y = gap + row * (posterHeight + gap);
-      imageCoordinates.push({ src: src, x: x, y: y})
+      imageCoordinates.push({ srcSet: srcSet, x: x, y: y})
       column = column + 1
     }
 
@@ -150,7 +150,7 @@ export const FilmList = ({ csvData }) => {
     const borderColor = '#89a';
     const boxShadowColor = 'rgba(20, 24, 28, 0.125)';
     const borderWidth = 1;
-    const promises = imageCoordinates.map(({ src, x, y }) => {
+    const promises = imageCoordinates.map(({ srcSet, x, y }) => {
       return new Promise((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = 'anonymous';
@@ -200,8 +200,8 @@ export const FilmList = ({ csvData }) => {
 
           resolve();
         };
-        img.onerror = () => reject(`Failed to load image: ${src}`);
-        img.src = src;
+        img.onerror = () => reject(`Failed to load image: ${srcSet}`);
+        img.srcset = srcSet;
       });
     });
 

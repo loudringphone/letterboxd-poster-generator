@@ -51,7 +51,7 @@ export const Poster = ({ oMDbApi, iMDb8Api, delay, filmName, filmYear, setVisibl
   return (
     <div className='poster cursor-pointer' onClick={handleDisplay} >
       {Array.isArray(imageUrls) ? (
-        <img className="poster" srcset={imageUrls.join(", ")} alt="Image" />
+        <img className="poster" srcSet={imageUrls.length > 1 ? imageUrls.join(", ") : imageUrls[0]} alt="Image" />
       ) : (
         <div className="loading" onClick={handleReload}>Loading...</div>
       )}
