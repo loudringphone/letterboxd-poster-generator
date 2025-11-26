@@ -120,13 +120,18 @@ export const FilmList = ({ csvData }) => {
   }, [filteredCSV])
 
   const generateImage = () => {
-    if (selectedMonth == 'all' || (oMDbApi == null && iMDb8Api == null) || visiblePostersCount == 0) return
+    const canvas = canvasRef.current;
+
+    if (selectedMonth == 'all' || (oMDbApi == null && iMDb8Api == null) || visiblePostersCount == 0) {
+      canvas.width = 0;
+      canvas.height = 0;
+      return
+    }
     const posters = document.querySelectorAll('img.poster');
     const visiblePosters = Array.from(posters).filter(p => {
       return !p.classList.contains('grayscale');
     });
 
-    const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     const posterWidth = 230
     const posterHeight = 345
