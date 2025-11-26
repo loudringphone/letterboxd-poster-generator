@@ -123,8 +123,7 @@ export const FilmList = ({ csvData }) => {
     if (selectedMonth == 'all' || (oMDbApi == null && iMDb8Api == null) || visiblePostersCount == 0) return
     const posters = document.querySelectorAll('img.poster');
     const visiblePosters = Array.from(posters).filter(p => {
-      const computedStyle = window.getComputedStyle(p);
-      return computedStyle.display !== 'none' && p.getAttribute('srcSet');
+      return !p.classList.contains('grayscale');
     });
 
     const canvas = canvasRef.current;
@@ -132,8 +131,9 @@ export const FilmList = ({ csvData }) => {
     const posterWidth = 230
     const posterHeight = 345
     const gap = 15
-    const canvasWidth = posterWidth * columnCount + gap * (columnCount + 1);
-    const rowCount = Math.ceil((visiblePosters.length) / columnCount)
+    const finalColumnCount = Math.min(columnCount, visiblePosters.length)
+    const canvasWidth = posterWidth * finalColumnCount + gap * (finalColumnCount + 1);
+    const rowCount = Math.ceil((visiblePosters.length) / finalColumnCount)
     const canvasHeight = posterHeight * rowCount + gap * (rowCount + 1);
 
     canvas.width = canvasWidth;
@@ -146,7 +146,7 @@ export const FilmList = ({ csvData }) => {
     let row = 0
     let column = 0
     for (let i = 0; i < visiblePosters.length; i++) {
-      if (i != 0 && i%columnCount == 0) {
+      if (i != 0 && i%finalColumnCount == 0) {
         row = row + 1
         column = 0
       }
@@ -262,23 +262,23 @@ export const FilmList = ({ csvData }) => {
                 ))}
               </select>
             </div>
-            <div id="column-counter" className='mr-4'>
-              <label htmlFor="columnCounter" className='text-nowrap'>Cols: </label>
+            <div id='column-counter' className='mr-4'>
+              <label htmlFor='columnCounter' className='text-nowrap'>Cols: </label>
               <input
                 className='w-9 text-center'
-                type="number"
+                type='number'
                 value={columnCount}
                 onChange={handleColumnCountChange}
-                min="1"
-                max="10"
+                min='1'
+                max='10'
               />
             </div>
-            <div id="poster-counter">
+            <div id='poster-counter'>
               <p>{selectedMonth == 'all' || (oMDbApi == null && iMDb8Api == null)  ? 'Films' : 'Posts'}: <span> {visiblePostersCount} </span> </p>
             </div>
           </div>
 
-          <button className={`mt-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={confirmAPIs}>{isMassLoading ? "Fetching posters..." : "Click Here to confrim API keys"}</button>
+          <button className={`mt-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={confirmAPIs}>{isMassLoading ? 'Fetching posters...' : 'Click Here to confrim API keys'}</button>
 
           <div className='preview'>
             <div id='poster-list' ref={posterListRef}>
@@ -308,7 +308,7 @@ export const FilmList = ({ csvData }) => {
             </div>
           </div>
 
-          <button id='canvas-btn' className='btn mb-4' onClick={generateImage}>Click Here to Generate Poster Collage</button>
+          <button id='canvas-btn' className={`mb-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={generateImage}>{isMassLoading ? 'Fetching posters...' : 'Click Here to Generate Poster Collage'}</button>
           <canvas ref={canvasRef} onClick={downloadImage} className='w-[100%] h-[auto] cursor-pointer mb-4' />
 
 
