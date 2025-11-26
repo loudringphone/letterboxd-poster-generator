@@ -5,14 +5,14 @@ import fetchPoster from '../functions/fetchPoster';
 
 import './poster.css';
 
-export const Poster = ({ oMDbApi, iMDb8Api, delay, filmName, filmYear, setVisiblePostersCount }) => {
+export const Poster = ({ oMDbApi, iMDb8Api, index, lastIndex, filmName, filmYear, setVisiblePostersCount, setIsMassLoading }) => {
   const [filmData, setFilmData] = useState(null);
   const [imageUrls, setImageUrls] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
     setTimeout(() => {
       fetchPoster(oMDbApi, iMDb8Api, filmName, filmYear, setFilmData)
-    }, delay * 1200);
+    }, index * 1200);
   }, []);
 
   useEffect(() => {
@@ -24,15 +24,15 @@ export const Poster = ({ oMDbApi, iMDb8Api, delay, filmName, filmYear, setVisibl
       else {
         setImageUrls([filmData.Poster]);
       }
-      setLoading(false)
+      setIsLoading(false)
     }
   }, [filmData]);
 
   useEffect(() => {
-    if (!loading && !filmData.Poster) {
-      setVisiblePostersCount(prevCount => prevCount - 1);
-    }
-  }, [loading])
+    if (!isLoading && !filmData.Poster) setVisiblePostersCount(prevCount => prevCount - 1)
+
+    if (!isLoading && index == lastIndex) setIsMassLoading(false)
+  }, [isLoading])
 
   const handleDisplay = (event) => {
     let image = event.target.firstChild || event.target
@@ -51,7 +51,7 @@ export const Poster = ({ oMDbApi, iMDb8Api, delay, filmName, filmYear, setVisibl
   return (
     <div className='poster cursor-pointer' onClick={handleDisplay} >
       {Array.isArray(imageUrls) ? (
-        <img className="poster" srcSet={imageUrls.length > 1 ? imageUrls.join(", ") : imageUrls[0]} alt="Image" />
+        <img className="poster" srcSet={imageUrls.length > 1 ? imageUrls.join(", ") : imageUrls[0]} alt="Image" onError={() => setVisiblePostersCount(prev => prev - 1)}/>
       ) : (
         <div className="loading" onClick={handleReload}>Loading...</div>
       )}

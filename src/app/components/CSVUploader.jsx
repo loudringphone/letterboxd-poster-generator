@@ -30,7 +30,7 @@ export const CSVUploader = ({ getCSV }) => {
   return (
     <div id='csv-uploader' className='px-4'>
       <input className='text-white' type="file" accept=".csv" onChange={handleFileChange} ref={fileInputRef}/>
-      <button className="px-1 hover:bg-gray-200 hover:text-gray-500 active:bg-gray-500 active:text-gray-200 focus:outline-none" onClick={handleClear}>Clear</button>
+      <button className="btn" onClick={handleClear}>Clear</button>
     </div>
   );
 };

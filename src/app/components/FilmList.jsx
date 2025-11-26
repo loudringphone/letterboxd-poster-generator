@@ -52,6 +52,7 @@ export const FilmList = ({ csvData }) => {
     if (filteredCSV) {
       setVisiblePostersCount(filteredCSV.length)
     }
+    setIsMassLoading(false)
   }, [filteredCSV])
 
   const [columnCount, setColumnCount] = useState(4);
@@ -74,23 +75,33 @@ export const FilmList = ({ csvData }) => {
   const iMDb8ApiRef = useRef(null);
   const [oMDbApi, setOMDbApi] = useState(null);
   const [iMDb8Api, setIMDb8Api] = useState(null);
+  const [isMassLoading, setIsMassLoading] = useState(false);
 
   const confirmAPIs = () => {
     const oMDbApiVal = oMDbApiRef.current.value
     const iMDb8ApiVal = iMDb8ApiRef.current.value
-    if (oMDbApiVal === process.env.REACT_APP_PASSCODE) {
+
+    if ((oMDbApiVal == oMDbApi && iMDb8ApiVal == iMDb8Api) ||
+        (oMDbApiVal == process.env.REACT_APP_PASSCODE && oMDbApi == process.env.REACT_APP_OMDB_API && iMDb8Api == process.env.REACT_APP_IMDB8_API) ||
+        (iMDb8ApiVal == process.env.REACT_APP_PASSCODE && oMDbApi == process.env.REACT_APP_OMDB_API && iMDb8Api == process.env.REACT_APP_IMDB8_API)
+    ) return
+
+    if (isMassLoading) return
+
+    setIsMassLoading(true)
+
+    if (oMDbApiVal == process.env.REACT_APP_PASSCODE || iMDb8ApiVal == process.env.REACT_APP_PASSCODE) {
       setOMDbApi(process.env.REACT_APP_OMDB_API)
       setIMDb8Api(process.env.REACT_APP_IMDB8_API)
     } else {
       setOMDbApi(oMDbApiVal)
-    }
-    if (iMDb8ApiVal === process.env.REACT_APP_PASSCODE) {
-      setIMDb8Api(process.env.REACT_APP_IMDB8_API)
-      setOMDbApi(process.env.REACT_APP_OMDB_API)
-    } else {
       setIMDb8Api(iMDb8ApiVal)
     }
+
     setVisiblePostersCount(filteredCSV.length)
+    if (selectedMonth=='all') {
+      alert('Please select a month to generate an image of the film posters you watched.')
+    }
   }
 
   const canvasRef = useRef(null);
@@ -270,7 +281,7 @@ export const FilmList = ({ csvData }) => {
             </div>
           </div>
 
-          <button className='mt-4 px-1 hover:bg-gray-200 hover:text-gray-500 active:bg-gray-500 active:text-gray-200 focus:outline-none' onClick={confirmAPIs}>Click Here to confrim API keys</button>
+          <button className={`mt-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={confirmAPIs}>{isMassLoading ? "Fetching posters..." : "Click Here to confrim API keys"}</button>
 
           <div className='preview'>
             <div id='poster-list' ref={posterListRef}>
@@ -284,10 +295,12 @@ export const FilmList = ({ csvData }) => {
                           key={`${index}-${oMDbApi}-${iMDb8Api}`}
                           oMDbApi={oMDbApi}
                           iMDb8Api={iMDb8Api}
-                          delay={index}
+                          index={index}
+                          lastIndex = {filteredCSV.length-1}
                           filmName={row.Name}
                           filmYear={row.Year}
                           setVisiblePostersCount={setVisiblePostersCount}
+                          setIsMassLoading={setIsMassLoading}
                         />
                       );
                   } else {
@@ -298,7 +311,7 @@ export const FilmList = ({ csvData }) => {
             </div>
           </div>
 
-          <button id='canvas-btn' className='mb-4 px-1 hover:bg-gray-200 hover:text-gray-500 active:bg-gray-500 active:text-gray-200 focus:outline-none' onClick={generateImage}>Click Here to Generate Image</button>
+          <button id='canvas-btn' className='btn mb-4' onClick={generateImage}>Click Here to Generate Image</button>
           <canvas ref={canvasRef} onClick={downloadImage} className='w-[100%] h-[auto] cursor-pointer mb-4' />
 
 

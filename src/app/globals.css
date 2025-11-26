@@ -2,8 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+.btn {
+  @apply px-1 hover:bg-gray-200 hover:text-gray-500
+         active:bg-gray-500 active:text-gray-200
+         focus:outline-none;
+}
 
-
+a {
+  @apply underline
+}
 
 body {
   background-color: black;
