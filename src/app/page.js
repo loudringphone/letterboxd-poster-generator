@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <main className='flex flex-col py-4  w-full items-center justify-between font-mono text-sm lg:flex'>
-        <h1 className='text-lg text-center'>Letterboxd Diary Film Poster</h1>
+        <h1 className='text-lg text-center'>Letterboxd Monthly Poster Collage</h1>
         <h1 className='text-lg text-center mb-4'>Generator</h1>
         <Message/>
         <CSVUploader setCsvData={setCsvData}/>
