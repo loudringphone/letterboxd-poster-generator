@@ -3,7 +3,7 @@
 import React, { useRef } from 'react';
 import Papa from 'papaparse';
 
-export const CSVUploader = ({ getCSV }) => {
+export const CSVUploader = ({ setCsvData }) => {
   const fileInputRef = useRef();
 
   const handleFileChange = (e) => {
@@ -11,17 +11,15 @@ export const CSVUploader = ({ getCSV }) => {
     if (file) {
       Papa.parse(file, {
         complete: (result) => {
-          getCSV(result.data);
+          setCsvData(result.data);
         },
-        header: true, // Assuming the CSV has a header row
+        header: true, // the CSV has a header row
       });
-    } else {
-      getCSV(null)
     }
   };
 
   const handleClear = () => {
-    getCSV(null);
+    setCsvData(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = null;
     }
@@ -29,7 +27,7 @@ export const CSVUploader = ({ getCSV }) => {
 
   return (
     <div id='csv-uploader' className='px-4'>
-      <input className='text-white' type="file" accept=".csv" onChange={handleFileChange} ref={fileInputRef}/>
+      <input className='cursor-pointer text-white' type="file" accept=".csv" onChange={handleFileChange} ref={fileInputRef}/>
       <button className="btn" onClick={handleClear}>Clear</button>
     </div>
   );

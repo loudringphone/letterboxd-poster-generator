@@ -78,6 +78,8 @@ export const FilmList = ({ csvData }) => {
   const [isMassLoading, setIsMassLoading] = useState(false);
 
   const confirmAPIs = () => {
+    if (selectedMonth=='all') alert('Please select a month to generate your monthly poster collage.')
+
     const oMDbApiVal = oMDbApiRef.current.value
     const iMDb8ApiVal = iMDb8ApiRef.current.value
 
@@ -88,8 +90,6 @@ export const FilmList = ({ csvData }) => {
 
     if (isMassLoading) return
 
-    setIsMassLoading(true)
-
     if (oMDbApiVal == process.env.REACT_APP_PASSCODE || iMDb8ApiVal == process.env.REACT_APP_PASSCODE) {
       setOMDbApi(process.env.REACT_APP_OMDB_API)
       setIMDb8Api(process.env.REACT_APP_IMDB8_API)
@@ -99,9 +99,6 @@ export const FilmList = ({ csvData }) => {
     }
 
     setVisiblePostersCount(filteredCSV.length)
-    if (selectedMonth=='all') {
-      alert('Please select a month to generate an image of the film posters you watched.')
-    }
   }
 
   const canvasRef = useRef(null);
@@ -311,7 +308,7 @@ export const FilmList = ({ csvData }) => {
             </div>
           </div>
 
-          <button id='canvas-btn' className='btn mb-4' onClick={generateImage}>Click Here to Generate Image</button>
+          <button id='canvas-btn' className='btn mb-4' onClick={generateImage}>Click Here to Generate Poster Collage</button>
           <canvas ref={canvasRef} onClick={downloadImage} className='w-[100%] h-[auto] cursor-pointer mb-4' />
 
 

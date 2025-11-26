@@ -10,6 +10,7 @@ export const Poster = ({ oMDbApi, iMDb8Api, index, lastIndex, filmName, filmYear
   const [imageUrls, setImageUrls] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
+    setIsMassLoading(true)
     setTimeout(() => {
       fetchPoster(oMDbApi, iMDb8Api, filmName, filmYear, setFilmData)
     }, index * 1200);
@@ -29,7 +30,9 @@ export const Poster = ({ oMDbApi, iMDb8Api, index, lastIndex, filmName, filmYear
   }, [filmData]);
 
   useEffect(() => {
-    if (!isLoading && !filmData.Poster) setVisiblePostersCount(prevCount => prevCount - 1)
+    if (!isLoading && (imageUrls == null || imageUrls[0] == undefined)) {
+      setVisiblePostersCount(prevCount => prevCount - 1)
+    }
 
     if (!isLoading && index == lastIndex) setIsMassLoading(false)
   }, [isLoading])

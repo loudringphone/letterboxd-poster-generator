@@ -7,10 +7,6 @@ import { FilmList } from './components/FilmList';
 
 export default function Home() {
   const [csvData, setCsvData] = useState(null);
-  const getCSV = (csv) => {
-    setCsvData(csv)
-  }
-
   const [showMsg, setShowMsg] = useState(false);
   const toggleMsg = () => setShowMsg((prev) => !prev);
 
@@ -19,7 +15,7 @@ export default function Home() {
         <h1 className='text-lg text-center'>Letterboxd Diary Film Poster</h1>
         <h1 className='text-lg text-center mb-4'>Generator<button className="btn text-base" onClick={toggleMsg}>ⓘ</button></h1>
         <Message className={showMsg ? "" : "hidden"} />
-        <CSVUploader getCSV={getCSV}/>
+        <CSVUploader setCsvData={setCsvData}/>
         <FilmList csvData={csvData}/>
     </main>
   )
