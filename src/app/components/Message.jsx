@@ -6,7 +6,7 @@ export const Message = ({className}) => {
       </p>
       <p className="mt-2">
         To fetch movie posters, you need your own APIs:{' '}
-        <a href="https://www.omdbapi.com/" target="_blank" rel="noopener noreferrer">OMDb API</a> and{' '}
+        <a href="https://www.omdbapi.com/" target="_blank" rel="noopener noreferrer">OMDb API</a> and/or{' '}
         <a href="https://rapidapi.com/apidojo/api/imdb8" target="_blank" rel="noopener noreferrer">IMDb8 API</a>.
       </p>
     </div>
