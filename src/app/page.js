@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Message } from './components/Message'
-import { CSVUploader } from './components/CSVUploader'
+import { CsvUploader } from './components/CsvUploader'
 import { FilmList } from './components/FilmList';
 
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
     <main className='flex flex-col py-4  w-full items-center justify-between font-mono text-sm lg:flex'>
         <h1 className='text-lg text-center mb-4'>Letterboxd Monthly Poster Collage Generator</h1>
         <Message/>
-        <CSVUploader setCsvData={setCsvData}/>
+        <CsvUploader setCsvData={setCsvData}/>
         <FilmList csvData={csvData}/>
     </main>
   )

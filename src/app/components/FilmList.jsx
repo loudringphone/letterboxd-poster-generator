@@ -119,6 +119,9 @@ export const FilmList = ({ csvData }) => {
     }
   }, [filteredCSV])
 
+  const [useRatio1by1, setUseRatio1by1] = useState(true);
+  const [showMonth, setShowMonth] = useState(true);
+
   const generateImage = () => {
     const canvas = canvasRef.current;
 
@@ -137,14 +140,25 @@ export const FilmList = ({ csvData }) => {
     const posterHeight = 345
     const gap = 15
     const finalColumnCount = Math.min(columnCount, visiblePosters.length)
-    const canvasWidth = posterWidth * finalColumnCount + gap * (finalColumnCount + 1);
-    const rowCount = Math.ceil((visiblePosters.length) / finalColumnCount)
-    const canvasHeight = posterHeight * rowCount + gap * (rowCount + 1);
+    const standardWidth = posterWidth * finalColumnCount + gap * (finalColumnCount + 1);
+    const rowCount = Math.ceil((visiblePosters.length) / finalColumnCount);
+    const standardHeight = posterHeight * rowCount + gap * (rowCount + 1);
+    let canvasWidth = standardWidth
+    let canvasHeight = standardHeight
 
+    if (useRatio1by1) {
+      if (canvasWidth > canvasHeight) {
+        canvasHeight = canvasWidth;
+      } else {
+        canvasWidth = canvasHeight
+      }
+    }
+
+    const fontSize = 24;
     canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
+    canvas.height = showMonth ? canvasHeight + fontSize : canvasHeight;
     context.fillStyle = 'black';
-    context.fillRect(0, 0, canvasWidth, canvasHeight);
+    context.fillRect(0, 0, canvasWidth, canvas.height);
 
     let imageCoordinates = [];
 
@@ -156,8 +170,12 @@ export const FilmList = ({ csvData }) => {
         column = 0
       }
       const srcSet = visiblePosters[i].srcset
-      const x = gap + column * (posterWidth + gap);
-      const y = gap + row * (posterHeight + gap);
+      let x = gap + column * (posterWidth + gap);
+      let y = gap + row * (posterHeight + gap);
+      if (useRatio1by1) {
+        x += (canvasWidth - standardWidth)/2
+        y += (canvasHeight - standardHeight)/2
+      }
       imageCoordinates.push({ srcSet: srcSet, x: x, y: y})
       column = column + 1
     }
@@ -220,6 +238,22 @@ export const FilmList = ({ csvData }) => {
         img.srcset = srcSet;
       });
     });
+
+    if (showMonth && selectedMonth !== 'all') {
+      context.save();
+      context.fillStyle = '#9ab'; // text color
+      context.font = `bold ${fontSize}px Helvetica, Arial, sans-serif`; // font size & family
+      context.textAlign = 'right'; // horizontal alignment
+      context.textBaseline = 'top'; // vertical alignment
+
+      // Position: center horizontally, small padding from top
+      const x = canvasWidth - gap;
+      const y = (canvasHeight - standardHeight)/2 + (row+1) * (posterHeight + gap) + gap/2;
+      const displayMonth = selectedMonth.replace(/([a-zA-Z]+)(\d+)/, '$1 $2');
+      context.fillText(displayMonth, x, y);
+
+      context.restore();
+    }
 
     Promise.all(promises)
   };
@@ -311,6 +345,28 @@ export const FilmList = ({ csvData }) => {
                 })
               )}
             </div>
+          </div>
+
+          <div className='mb-4 flex items-center space-x-6'>
+            <label className='flex items-center'>
+              <input
+                type='checkbox'
+                checked={useRatio1by1}
+                onChange={(e) => setUseRatio1by1(e.target.checked)}
+                className='mr-2'
+              />
+              Use Ratio 1:1
+            </label>
+
+            <label className='flex items-center'>
+              <input
+                type='checkbox'
+                checked={showMonth}
+                onChange={(e) => setShowMonth(e.target.checked)}
+                className='mr-2'
+              />
+              Show Month
+            </label>
           </div>
 
           <button id='canvas-btn' className={`mb-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={generateImage}>{isMassLoading ? 'Fetching posters...' : 'Click Here to Generate Poster Collage'}</button>

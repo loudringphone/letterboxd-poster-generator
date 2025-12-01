@@ -3,7 +3,7 @@
 import React, { useRef } from 'react';
 import Papa from 'papaparse';
 
-export const CSVUploader = ({ setCsvData }) => {
+export const CsvUploader = ({ setCsvData }) => {
   const fileInputRef = useRef();
 
   const handleFileChange = (e) => {
