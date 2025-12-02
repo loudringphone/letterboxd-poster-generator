@@ -91,8 +91,14 @@ export const FilmList = ({ csvData }) => {
     if (isMassLoading) return
 
     if (oMDbApiVal == process.env.REACT_APP_PASSCODE || iMDb8ApiVal == process.env.REACT_APP_PASSCODE) {
-      setOMDbApi(process.env.REACT_APP_OMDB_API)
-      setIMDb8Api(process.env.REACT_APP_IMDB8_API)
+      if (oMDbApiVal && oMDbApiVal != process.env.REACT_APP_PASSCODE)
+        setOMDbApi(oMDbApiVal)
+      else
+        setOMDbApi(process.env.REACT_APP_OMDB_API)
+      if (iMDb8ApiVal && iMDb8ApiVal != process.env.REACT_APP_PASSCODE)
+        setIMDb8Api(iMDb8ApiVal)
+      else
+        setIMDb8Api(process.env.REACT_APP_IMDB8_API)
     } else {
       setOMDbApi(oMDbApiVal)
       setIMDb8Api(iMDb8ApiVal)
@@ -104,11 +110,10 @@ export const FilmList = ({ csvData }) => {
   const canvasRef = useRef(null);
   useEffect(() => {
     if (filteredCSV && selectedMonth != 'all') {
-      if (filteredCSV.length < 4) {
+      if (filteredCSV.length < 4)
         setColumnCount(filteredCSV.length)
-      } else {
+      else
         setColumnCount(4)
-      }
     }
     const canvas = canvasRef.current;
     if (canvas) {
@@ -147,11 +152,10 @@ export const FilmList = ({ csvData }) => {
     let canvasHeight = standardHeight
 
     if (useRatio1by1) {
-      if (canvasWidth > canvasHeight) {
+      if (canvasWidth > canvasHeight)
         canvasHeight = canvasWidth;
-      } else {
+      else
         canvasWidth = canvasHeight
-      }
     }
 
     const fontSize = 24;

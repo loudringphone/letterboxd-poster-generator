@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import fetchPoster from '../functions/fetchPoster';
+import debouncedFetchPoster from '../functions/fetchPoster';
 
 import './poster.css';
 
@@ -14,7 +14,7 @@ export const Poster = ({ oMDbApi, iMDb8Api, index, lastIndex, filmName, filmYear
   useEffect(() => {
     setIsMassLoading(true)
     setTimeout(() => {
-      fetchPoster(oMDbApi, iMDb8Api, filmName, filmYear, setFilmData)
+      debouncedFetchPoster(oMDbApi, iMDb8Api, filmName, filmYear, setFilmData)
     }, index * 1200);
   }, []);
 
@@ -64,7 +64,7 @@ export const Poster = ({ oMDbApi, iMDb8Api, index, lastIndex, filmName, filmYear
           }}
         />
       ) : (
-        <div className="loading" onClick={()=>{fetchPoster(oMDbApi, iMDb8Api, filmName, filmYear, setFilmData)}}>Loading...</div>
+        <div className="loading" onClick={()=>{debouncedFetchPoster(oMDbApi, iMDb8Api, filmName, filmYear, setFilmData)}}>Loading...</div>
       )}
     </div>
   );
