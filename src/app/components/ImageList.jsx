@@ -41,7 +41,7 @@ export const ImageList = ({ isMassLoading, filteredCSV, posterUrls, setVisiblePo
             onClick={toggleInputList}>
           {showInputs ? '-' : '+'}
         </h2>
-        <h2 className='text-lg'>(Optional) Poster Manual Override</h2>
+        <h2 className='text-lg'>Optional: Poster Manual Override</h2>
       </div>
       {showInputs && (
         <div>
