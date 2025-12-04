@@ -355,7 +355,7 @@ export const CollageBuilder = ({ csvData }) => {
             </div>
           </div>
 
-          <button className={`mt-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={confirmAPIs}>{isMassLoading ? 'Fetching posters...' : 'Confrim API keys'}</button>
+          <button className={`mt-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={confirmAPIs}>{isMassLoading ? 'Fetching Posters...' : 'Confrim API Keys'}</button>
 
           <div className='preview'>
             { isDisplayPosters ?
@@ -408,7 +408,7 @@ export const CollageBuilder = ({ csvData }) => {
             </label>
           </div>
 
-          <button id='canvas-btn' className={`mb-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={generateImage}>{isMassLoading ? 'Fetching posters...' : 'Generate Poster Collage'}</button>
+          <button id='canvas-btn' className={`mb-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={generateImage}>{isMassLoading ? 'Fetching Posters...' : 'Generate Poster Collage'}</button>
           <canvas ref={canvasRef} onClick={downloadImage} className='w-[100%] h-[auto] cursor-pointer mb-4' />
 
 

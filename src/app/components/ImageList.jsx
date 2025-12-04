@@ -12,7 +12,7 @@ export const ImageList = ({ isMassLoading, filteredCSV, posterUrls, setVisiblePo
     tempValues.current[idx] = newUrl;
   };
 
-  const updateAllPosters = () => {
+  const updatePosters = () => {
     isManuallyChanged.current.forEach((idx) => {
       const img = document.getElementById(`poster${idx}`)
       const srcset = tempValues.current[idx]
@@ -62,7 +62,7 @@ export const ImageList = ({ isMassLoading, filteredCSV, posterUrls, setVisiblePo
             </div>
           ))}
           <button
-            onClick={updateAllPosters}
+            onClick={updatePosters}
             className={`float-right mt-4 text-lg underline px-1 ${isMassLoading ? '' : 'btn'}`}
             disabled={isMassLoading}
           >
