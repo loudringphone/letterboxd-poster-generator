@@ -27,18 +27,10 @@ export const ImageList = ({ isMassLoading, filteredCSV, posterUrls, setVisiblePo
         }
       };
       testImg.onerror = () => {
+        console.log('ttttt')
         img.classList.add('grayscale');
       };
-      testImg.srcset = srcset;
-
-
-
-
-
-      if (img.classList.contains('grayscale')) {
-        img.classList.remove('grayscale')
-        setVisiblePostersCount(prevCount => prevCount + 1)
-      }
+      testImg.src = srcset;
     })
     isManuallyChanged.current = [];
     tempValues.current = [];
