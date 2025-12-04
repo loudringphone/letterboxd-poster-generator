@@ -23,11 +23,9 @@ export const ImageList = ({ isMassLoading, filteredCSV, posterUrls, setVisiblePo
         if (img.classList.contains('grayscale')) {
           img.classList.remove('grayscale');
           setVisiblePostersCount(prev => prev + 1);
-          console.log('yess?')
         }
       };
       testImg.onerror = () => {
-        console.log('ttttt')
         img.classList.add('grayscale');
       };
       testImg.src = srcset;
@@ -65,7 +63,8 @@ export const ImageList = ({ isMassLoading, filteredCSV, posterUrls, setVisiblePo
           ))}
           <button
             onClick={updateAllPosters}
-            className='btn float-right mt-4'
+            className={`float-right mt-4 text-lg underline px-1 ${isMassLoading ? '' : 'btn'}`}
+            disabled={isMassLoading}
           >
             Update Posters
           </button>
