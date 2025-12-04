@@ -48,9 +48,10 @@ export const ImageList = ({ isMassLoading, filteredCSV, posterUrls, setVisiblePo
           {filteredCSV.map((row, index) => (
             <div key={index} className='flex items-center mt-3'>
 
-              <span className=''>{row['Name']} ({row['Year']})</span>
+              <span className=''>{row.Name} ({row.Year})</span>
 
               <input
+                key={`${row.Name} ${row.Year}`}
                 type='text'
                 className='flex-1 border px-2 py-1 ml-2'
                 placeholder='Poster URL'

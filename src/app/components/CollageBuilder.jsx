@@ -37,6 +37,9 @@ export const CollageBuilder = ({ csvData }) => {
       );
       setUniqueMonths(months);
       if (selectedMonth !== 'all') {
+        const urls = Array(filteredCSV.length).fill(['']);
+        setPosterUrls(urls)
+
         setFilteredCSV(csvData.filter(((row) => {
           return filterMonth(row, selectedMonth)
         })))
@@ -52,9 +55,6 @@ export const CollageBuilder = ({ csvData }) => {
   useEffect(() => {
     if (filteredCSV) {
       setVisiblePostersCount(filteredCSV.length)
-
-      const urls = Array(filteredCSV.length).fill(['']);
-      setPosterUrls(urls)
     }
   }, [filteredCSV])
 
