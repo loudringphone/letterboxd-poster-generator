@@ -1,7 +1,8 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Poster } from './Poster';
+import { ImageList } from './ImageList'
+import { Posters } from './Posters';
 import './poster.css';
 
 export const CollageBuilder = ({ csvData }) => {
@@ -51,8 +52,10 @@ export const CollageBuilder = ({ csvData }) => {
   useEffect(() => {
     if (filteredCSV) {
       setVisiblePostersCount(filteredCSV.length)
+
+      const urls = Array(filteredCSV.length).fill(['']);
+      setPosterUrls(urls)
     }
-    setIsMassLoading(false)
   }, [filteredCSV])
 
   const [columnCount, setColumnCount] = useState(4);
@@ -78,6 +81,7 @@ export const CollageBuilder = ({ csvData }) => {
   const [isMassLoading, setIsMassLoading] = useState(false);
 
   const confirmAPIs = () => {
+    if (isMassLoading) return
     if (selectedMonth=='all') alert('Please select a month to generate your monthly poster collage.')
 
     const oMDbApiVal = oMDbApiRef.current.value
@@ -273,17 +277,42 @@ export const CollageBuilder = ({ csvData }) => {
     downloadLink.click();
   }
 
+  const [isDisplayPosters, setIsDisplayPosters] = useState(false);
+  useEffect(() => {
+    if (oMDbApi !== null && iMDb8Api !== null && selectedMonth !== 'all') {
+      setIsDisplayPosters(true);
+      setIsMassLoading(true);
+      setVisiblePostersCount(filteredCSV.length)
+    } else {
+      setIsDisplayPosters(false);
+    }
+  }, [oMDbApi, iMDb8Api, selectedMonth]);
+
+  const [posterUrls, setPosterUrls] = useState([]);
+  useEffect(() => {
+    if (isMassLoading) {
+      const urls = Array(filteredCSV.length).fill(['']);
+      setPosterUrls(urls)
+    }
+  }, [isMassLoading])
+
+  const [showInputs, setShowInputs] = useState(false);
+  const toggleInputList = () => {
+    setShowInputs(prev => !prev);
+  }
+
   return (
     <div>
      {uniqueMonths.length > 0 ? (
         <div className='diary'>
-          <div className='btns flex px-4 mt-4 justify-center'>
+          <div className='btns flex px-4 mt-4 justify-center text-lg'>
             <div id="OMDbApi" className='mr-4'>
               <label htmlFor="OMDbApi">OMDb API: </label>
               <input
                 className='w-20'
                 type="password"
                 ref={oMDbApiRef}
+                disabled={isMassLoading}
                 onKeyDown={(e) => {if (e.key === "Enter") confirmAPIs()}}
               />
             </div>
@@ -293,11 +322,12 @@ export const CollageBuilder = ({ csvData }) => {
                 className='w-20'
                 type="password"
                 ref={iMDb8ApiRef}
+                disabled={isMassLoading}
                 onKeyDown={(e) => {if (e.key === "Enter") confirmAPIs()}}
               />
             </div>
           </div>
-          <div className='btns flex px-4 mt-4 justify-center'>
+          <div className='btns flex px-4 mt-4 justify-center text-lg'>
             <div id='month-selector' className='mr-4'>
               <label htmlFor="monthSelector" className='text-nowrap'>Month: </label>
               <select className='w-[65px]' onChange={(e) => setSelectedMonth(e.target.value)}>
@@ -325,43 +355,44 @@ export const CollageBuilder = ({ csvData }) => {
             </div>
           </div>
 
-          <button className={`mt-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={confirmAPIs}>{isMassLoading ? 'Fetching posters...' : 'Click Here to confrim API keys'}</button>
+          <button className={`mt-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={confirmAPIs}>{isMassLoading ? 'Fetching posters...' : 'Confrim API keys'}</button>
 
           <div className='preview'>
-            <div id='poster-list' ref={posterListRef}>
-              {oMDbApi !== null && iMDb8Api !== null  && selectedMonth !== 'all' && (
-                filteredCSV.map((row, index) => {
-                  const date = new Date(row['Watched Date']);
-                  const monthYear = `${getMonthName(date.getMonth())}${date.getFullYear().toString().slice(-2)}`;
-                  if (monthYear === selectedMonth) {
-                      return (
-                        <Poster
-                          key={`${index}-${oMDbApi}-${iMDb8Api}`}
-                          oMDbApi={oMDbApi}
-                          iMDb8Api={iMDb8Api}
-                          index={index}
-                          lastIndex = {filteredCSV.length-1}
-                          filmName={row.Name}
-                          filmYear={row.Year}
-                          setVisiblePostersCount={setVisiblePostersCount}
-                          setIsMassLoading={setIsMassLoading}
-                        />
-                      );
-                  } else {
-                    return null;
-                  }
-                })
-              )}
-            </div>
+            { isDisplayPosters ?
+                <Posters
+                  posterListRef={posterListRef}
+                  oMDbApi={oMDbApi}
+                  iMDb8Api={iMDb8Api}
+                  filteredCSV={filteredCSV}
+                  setVisiblePostersCount={setVisiblePostersCount}
+                  setIsMassLoading={setIsMassLoading}
+                  posterUrls={posterUrls}
+                  setPosterUrls={setPosterUrls}
+                />
+                :
+                <></>
+            }
           </div>
 
-          <div className='mb-4 flex items-center space-x-6'>
+          {
+            isDisplayPosters && <ImageList
+                                  key={selectedMonth}
+                                  isMassLoading={isMassLoading}
+                                  filteredCSV={filteredCSV}
+                                  posterUrls={posterUrls}
+                                  setVisiblePostersCount={setVisiblePostersCount}
+                                  showInputs={showInputs}
+                                  toggleInputList={toggleInputList}
+                                />
+          }
+
+          <div className='mb-4 flex items-center space-x-6 text-lg'>
             <label className='flex items-center'>
               <input
                 type='checkbox'
                 checked={useRatio1by1}
                 onChange={(e) => setUseRatio1by1(e.target.checked)}
-                className='mr-2'
+                className='mr-2 cursor-pointer'
               />
               Use Ratio 1:1
             </label>
@@ -371,13 +402,13 @@ export const CollageBuilder = ({ csvData }) => {
                 type='checkbox'
                 checked={showMonth}
                 onChange={(e) => setShowMonth(e.target.checked)}
-                className='mr-2'
+                className='mr-2 cursor-pointer'
               />
               Show Month
             </label>
           </div>
 
-          <button id='canvas-btn' className={`mb-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={generateImage}>{isMassLoading ? 'Fetching posters...' : 'Click Here to Generate Poster Collage'}</button>
+          <button id='canvas-btn' className={`mb-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={generateImage}>{isMassLoading ? 'Fetching posters...' : 'Generate Poster Collage'}</button>
           <canvas ref={canvasRef} onClick={downloadImage} className='w-[100%] h-[auto] cursor-pointer mb-4' />
 
 

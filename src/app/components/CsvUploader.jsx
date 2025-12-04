@@ -26,7 +26,7 @@ export const CsvUploader = ({ setCsvData }) => {
   };
 
   return (
-    <div id='csv-uploader' className='px-4'>
+    <div id='csv-uploader' className='px-4 text-lg'>
       <input className='cursor-pointer text-white' type="file" accept=".csv" onChange={handleFileChange} ref={fileInputRef}/>
       <button className="btn" onClick={handleClear}>Clear</button>
     </div>

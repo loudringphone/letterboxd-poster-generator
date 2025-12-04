@@ -1,11 +1,3 @@
-const debounce = (fn, delay = 600) => {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), delay);
-  };
-}
-
 const fetchIMDb8 = async (iMDb8Api, filmName, filmYear) => {
   try {
     const query = encodeURIComponent(`${filmName} ${filmYear}`);
@@ -44,17 +36,23 @@ const fetchOMDB = async (oMDbapi, filmName, filmYear) => {
   }
 };
 
-const debouncedFetchPoster = debounce(async (oMDbapi, iMDb8Api, filmName, filmYear, setFilmData) => {
-  const omdbResult = await fetchOMDB(oMDbapi, filmName, filmYear);
-  if (omdbResult) {
-    return setFilmData(omdbResult);
+const fetchPoster = async (oMDbapi, iMDb8Api, filmName, filmYear, setFilmData, signal = undefined) => {
+  try {
+    const omdbResult = await fetchOMDB(oMDbapi, filmName, filmYear);
+    if (signal.aborted) return null;
+    if (omdbResult) {
+      return setFilmData(omdbResult);
+    }
+
+    const imdbResult = await fetchIMDb8(iMDb8Api, filmName, filmYear);
+    if (signal.aborted) return null;
+    if (imdbResult) {
+      setFilmData(imdbResult);
+    }
+  } catch (err) {
+    if (err.name === 'AbortError') return null;
   }
-
-  const imdbResult = await fetchIMDb8(iMDb8Api, filmName, filmYear);
-  if (imdbResult) {
-    setFilmData(imdbResult);
-  }
-}, 600);
+};
 
 
-export default debouncedFetchPoster;
+export default fetchPoster;

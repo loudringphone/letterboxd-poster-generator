@@ -1,6 +1,6 @@
-export const Message = ({className}) => {
+export const Message = ({ className }) => {
   return (
-    <div className={`${className} mb-4 mr-auto ml-auto px-4`}>
+    <div className={`${className} mb-4`}>
       <p>
         First, export your Letterboxd account data in CSV format from <a href="https://letterboxd.com/settings/data/" target="_blank" rel="noopener noreferrer">Letterboxd Data Settings</a>. Then, import the <span className="font-bold">diary.csv</span>.
       </p>
