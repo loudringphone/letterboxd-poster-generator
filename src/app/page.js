@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Message } from './components/Message'
 import { CsvUploader } from './components/CsvUploader'
-import { FilmList } from './components/FilmList';
+import { CollageBuilder } from './components/CollageBuilder';
 
 export default function Home() {
   const [csvData, setCsvData] = useState(null);
@@ -13,7 +13,7 @@ export default function Home() {
         <h1 className='text-lg text-center mb-4'>Letterboxd Monthly Poster Collage Generator</h1>
         <Message/>
         <CsvUploader setCsvData={setCsvData}/>
-        <FilmList csvData={csvData}/>
+        <CollageBuilder csvData={csvData}/>
     </main>
   )
 }

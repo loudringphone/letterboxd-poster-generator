@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Poster } from './Poster';
 import './poster.css';
 
-export const FilmList = ({ csvData }) => {
+export const CollageBuilder = ({ csvData }) => {
   const [filteredCSV, setFilteredCSV] = useState(csvData)
   const [selectedMonth, setSelectedMonth] = useState('all');
   const [uniqueMonths, setUniqueMonths] = useState([]);
