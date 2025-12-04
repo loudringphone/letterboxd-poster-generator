@@ -16,8 +16,6 @@ export const ImageList = ({ isMassLoading, filteredCSV, posterUrls, setVisiblePo
     isManuallyChanged.current.forEach((idx) => {
       const img = document.getElementById(`poster${idx}`)
       const srcset = tempValues.current[idx]
-      img.srcset = srcset
-
       const testImg = new Image();
       testImg.onload = () => {
         if (img.classList.contains('grayscale')) {
@@ -28,7 +26,9 @@ export const ImageList = ({ isMassLoading, filteredCSV, posterUrls, setVisiblePo
       testImg.onerror = () => {
         img.classList.add('grayscale');
       };
+
       testImg.src = srcset;
+      img.srcset = srcset
     })
     isManuallyChanged.current = [];
     tempValues.current = [];
