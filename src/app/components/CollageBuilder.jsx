@@ -327,10 +327,10 @@ export const CollageBuilder = ({ csvData }) => {
               />
             </div>
           </div>
-          <div className='btns flex px-4 mt-4 justify-center text-lg'>
+          <div className='btns flex px-4 mt-4 justify-center text-lg w-max-[450px]'>
             <div id='month-selector' className='mr-4'>
               <label htmlFor="monthSelector" className='text-nowrap'>Month: </label>
-              <select className='w-[65px]' onChange={(e) => setSelectedMonth(e.target.value)}>
+              <select className='w-max' onChange={(e) => setSelectedMonth(e.target.value)}>
                 <option value="all">All</option>
                 {uniqueMonths.map((month, i) => (
                   <option key={i} value={month}>
@@ -347,7 +347,7 @@ export const CollageBuilder = ({ csvData }) => {
                 value={columnCount}
                 onChange={handleColumnCountChange}
                 min='1'
-                max='10'
+                max='9'
               />
             </div>
             <div id='poster-counter'>
@@ -357,7 +357,7 @@ export const CollageBuilder = ({ csvData }) => {
 
           <button className={`mt-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={confirmAPIs}>{isMassLoading ? 'Fetching Posters...' : 'Confrim API Keys'}</button>
 
-          <div className='preview'>
+          <div className='flex mt-4'>
             { isDisplayPosters ?
                 <Posters
                   posterListRef={posterListRef}
@@ -386,7 +386,7 @@ export const CollageBuilder = ({ csvData }) => {
                                 />
           }
 
-          <div className='mb-4 flex items-center space-x-6 text-lg'>
+          <div className='mt-4 flex items-center space-x-6 text-lg'>
             <label className='flex items-center'>
               <input
                 type='checkbox'
@@ -408,11 +408,11 @@ export const CollageBuilder = ({ csvData }) => {
             </label>
           </div>
 
-          <button id='canvas-btn' className={`mb-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={generateImage}>{isMassLoading ? 'Fetching Posters...' : 'Generate Poster Collage'}</button>
-          <canvas ref={canvasRef} onClick={downloadImage} className='w-[100%] h-[auto] cursor-pointer mb-4' />
+          <button id='canvas-btn' className={`mt-4 ${isMassLoading ? 'cursor-wait' : 'btn'}`} onClick={generateImage}>{isMassLoading ? 'Fetching Posters...' : 'Generate Poster Collage'}</button>
+          <canvas ref={canvasRef} onClick={downloadImage} className='w-[100%] h-[auto] cursor-pointer mt-4' />
 
 
-          <div id='csv-data' className='px-4 '>
+          <div id='csv-data' className='px-4 mt-4'>
             <p>CSV data:</p>
             <table className='border-spacing-x-4'>
               <thead>

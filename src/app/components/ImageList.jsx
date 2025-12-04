@@ -35,14 +35,13 @@ export const ImageList = ({ isMassLoading, filteredCSV, posterUrls, setVisiblePo
   }
 
   return (
-    <div className={'mb-4'}>
-      <div className='flex font-bold items-center space-x-2 justify-center'>
-        <h2 className='btn !text-2xl !no-underline cursor-pointer'
-            onClick={toggleInputList}>
+    <div className={'mt-4'}>
+      <button className='flex items-center space-x-2 justify-self-center btn !no-underline w-fit' onClick={toggleInputList}>
+        <h2 className='!text-2xl !font-bold'>
           {showInputs ? '-' : '+'}
         </h2>
         <h2 className='text-lg'>Optional: Poster Manual Override</h2>
-      </div>
+      </button>
       {showInputs && (
         <div>
           {filteredCSV.map((row, index) => (
