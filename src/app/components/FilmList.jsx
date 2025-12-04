@@ -128,6 +128,8 @@ export const FilmList = ({ csvData }) => {
   const [showMonth, setShowMonth] = useState(true);
 
   const generateImage = () => {
+    if (isMassLoading) return
+
     const canvas = canvasRef.current;
 
     if (selectedMonth == 'all' || (oMDbApi == null && iMDb8Api == null) || visiblePostersCount == 0) {
@@ -282,6 +284,7 @@ export const FilmList = ({ csvData }) => {
                 className='w-20'
                 type="password"
                 ref={oMDbApiRef}
+                onKeyDown={(e) => {if (e.key === "Enter") confirmAPIs()}}
               />
             </div>
             <div id="IMDb8api">
@@ -290,6 +293,7 @@ export const FilmList = ({ csvData }) => {
                 className='w-20'
                 type="password"
                 ref={iMDb8ApiRef}
+                onKeyDown={(e) => {if (e.key === "Enter") confirmAPIs()}}
               />
             </div>
           </div>

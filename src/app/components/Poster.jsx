@@ -42,6 +42,8 @@ export const Poster = ({ oMDbApi, iMDb8Api, index, lastIndex, filmName, filmYear
 
   const toggleDisplay = (event) => {
     let image = event.target.firstChild || event.target
+    if (image.tagName != 'IMG') return
+
     if (image.classList.contains('grayscale')) {
       image.classList.remove('grayscale')
       setVisiblePostersCount(prevCount => prevCount + 1)
