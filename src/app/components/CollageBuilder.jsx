@@ -94,8 +94,7 @@ export const CollageBuilder = ({ csvData }) => {
     const oMDbApiVal = oMDbApiRef.current.value
     const iMDb8ApiVal = iMDb8ApiRef.current.value
 
-    const missingApiVals = (oMDbApiVal == null && iMDb8ApiVal == null) ||
-                        (oMDbApiVal.length == 0 && iMDb8ApiVal.length == 0);
+    const missingApiVals = !oMDbApiVal && !iMDb8ApiVal;
 
     let errorMessage = "";
     if (selectedMonth === 'all')
@@ -105,7 +104,7 @@ export const CollageBuilder = ({ csvData }) => {
 
     if (errorMessage) alert(errorMessage);
 
-    if ((oMDbApiVal == oMDbApi && iMDb8ApiVal == iMDb8Api) ||
+    if (missingApiVals || (oMDbApiVal == oMDbApi && iMDb8ApiVal == iMDb8Api) ||
         (oMDbApiVal == process.env.REACT_APP_PASSCODE && oMDbApi == process.env.REACT_APP_OMDB_API && iMDb8Api == process.env.REACT_APP_IMDB8_API) ||
         (iMDb8ApiVal == process.env.REACT_APP_PASSCODE && oMDbApi == process.env.REACT_APP_OMDB_API && iMDb8Api == process.env.REACT_APP_IMDB8_API)
     ) return
@@ -158,8 +157,7 @@ export const CollageBuilder = ({ csvData }) => {
 
     const canvas = canvasRef.current;
 
-    const missingApis = (oMDbApi == null && iMDb8Api == null) ||
-                        (oMDbApi.length == 0 && iMDb8Api.length == 0);
+    const missingApis = !oMDbApi && !iMDb8Api;
 
     let errorMessage = "";
     if (selectedMonth === 'all')
