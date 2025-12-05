@@ -90,18 +90,25 @@ export const CollageBuilder = ({ csvData }) => {
 
   const confirmAPIs = () => {
     if (isMassLoading) return
-    if (selectedMonth=='all')
-      alert('Please select a month to generate your monthly poster collage.')
 
     const oMDbApiVal = oMDbApiRef.current.value
     const iMDb8ApiVal = iMDb8ApiRef.current.value
+
+    const missingApiVals = (oMDbApiVal == null && iMDb8ApiVal == null) ||
+                        (oMDbApiVal.length == 0 && iMDb8ApiVal.length == 0);
+
+    let errorMessage = "";
+    if (selectedMonth === 'all')
+      errorMessage += "• Please select a month.\n";
+    if (missingApiVals)
+      errorMessage += "• Please enter at least one API key (OMDb or IMDb8).\n";
+
+    if (errorMessage) alert(errorMessage);
 
     if ((oMDbApiVal == oMDbApi && iMDb8ApiVal == iMDb8Api) ||
         (oMDbApiVal == process.env.REACT_APP_PASSCODE && oMDbApi == process.env.REACT_APP_OMDB_API && iMDb8Api == process.env.REACT_APP_IMDB8_API) ||
         (iMDb8ApiVal == process.env.REACT_APP_PASSCODE && oMDbApi == process.env.REACT_APP_OMDB_API && iMDb8Api == process.env.REACT_APP_IMDB8_API)
     ) return
-
-    if (isMassLoading) return
 
     if (oMDbApiVal == process.env.REACT_APP_PASSCODE || iMDb8ApiVal == process.env.REACT_APP_PASSCODE) {
       if (oMDbApiVal && oMDbApiVal != process.env.REACT_APP_PASSCODE)
