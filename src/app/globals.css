@@ -13,6 +13,20 @@ a {
   @apply underline
 }
 
+.diary {
+  @apply flex flex-col items-center
+}
+
+.poster {
+  @apply block justify-center items-center
+         text-[xx-small] w-[37.5px] h-[52.5px] rounded-[1px]
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
 body {
   background-color: black;
   color: white;

@@ -3,9 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import fetchPoster from '../functions/fetchPoster';
 
-import './poster.css';
-
-export const Posters = ({ posterListRef, oMDbApi, iMDb8Api, filteredCSV, setVisiblePostersCount, setIsMassLoading, posterUrls, setPosterUrls }) => {
+export const Posters = ({ posterListRef, colCount, oMDbApi, iMDb8Api, filteredCSV, setVisiblePostersCount, setIsMassLoading, posterUrls, setPosterUrls }) => {
   const [loadings, setLoadings] = useState([])
   const [errors, setErrors] = useState([])
 
@@ -70,7 +68,19 @@ export const Posters = ({ posterListRef, oMDbApi, iMDb8Api, filteredCSV, setVisi
   }
 
   return (
-    <div id='poster-list' ref={posterListRef}>
+    <div className={`grid gap-2 ${
+          colCount === 1 ? 'grid-cols-1' :
+          colCount === 2 ? 'grid-cols-2' :
+          colCount === 3 ? 'grid-cols-3' :
+          colCount === 4 ? 'grid-cols-4' :
+          colCount === 5 ? 'grid-cols-5' :
+          colCount === 6 ? 'grid-cols-6' :
+          colCount === 7 ? 'grid-cols-7' :
+          colCount === 8 ? 'grid-cols-8' :
+          'grid-cols-9'
+          }`}
+         ref={posterListRef}
+    >
       {filteredCSV.map((row, idx) => (
         <div key={`${idx}-${oMDbApi}-${iMDb8Api}`}
              className='poster cursor-pointer'

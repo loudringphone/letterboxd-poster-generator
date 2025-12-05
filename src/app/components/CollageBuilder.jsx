@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ImageList } from './ImageList';
 import { Posters } from './Posters';
-import './poster.css';
+
+const DEFAULT_COLUMN_COUNT = 4
 
 export const CollageBuilder = ({ csvData }) => {
   const [filteredCSV, setFilteredCSV] = useState(csvData);
@@ -39,7 +40,6 @@ export const CollageBuilder = ({ csvData }) => {
       if (selectedMonth !== 'all') {
         const urls = Array(filteredCSV.length).fill(['']);
         setPosterUrls(urls);
-
         setFilteredCSV(csvData.filter(((row) => {
           return filterMonth(row, selectedMonth);
         })))
@@ -52,40 +52,34 @@ export const CollageBuilder = ({ csvData }) => {
   }, [csvData, selectedMonth]);
 
   const [visiblePostersCount, setVisiblePostersCount] = useState(0)
-  useEffect(() => {
-    if (filteredCSV) {
-      setVisiblePostersCount(filteredCSV.length);
-    }
-  }, [filteredCSV]);
-
-  const [columnCount, setColumnCount] = useState(4);
-  const [columnInput, setColumnInput] = useState("4");
+  const [colCount, setColCount] = useState(DEFAULT_COLUMN_COUNT);
+  const [colInput, setColInput] = useState(DEFAULT_COLUMN_COUNT.toString());
   const posterListRef = useRef(null);
 
   const handleColChange = (event) => {
     let value = parseInt(event.target.value)
 
     if (isNaN(value)) {
-      setColumnInput("");
+      setColInput("");
       return;
     }
 
     if (value > 9) value = 9
-    setColumnCount(value);
-    setColumnInput(value.toString());
+    setColCount(value);
+    setColInput(value.toString());
   };
 
   const handleColBlur = () => {
-    if (columnInput === "") {
-      setColumnInput(columnCount.toString());
+    if (colInput === "") {
+      setColInput(colCount.toString());
     };
   };
 
 
   useEffect(() => {
     if (posterListRef.current)
-      posterListRef.current.style.gridTemplateColumns = `repeat(${columnCount}, 37.5px)`;
-  }, [columnCount]);
+      posterListRef.current.style.gridTemplateColumns = `repeat(${colCount}, 37.5px)`;
+  }, [colCount]);
 
 
   const oMDbApiRef = useRef(null);
@@ -128,12 +122,18 @@ export const CollageBuilder = ({ csvData }) => {
 
   const canvasRef = useRef(null);
   useEffect(() => {
-    if (filteredCSV && selectedMonth != 'all') {
-      if (filteredCSV.length < 4)
-        setColumnCount(filteredCSV.length)
-      else
-        setColumnCount(4)
+    if (filteredCSV) {
+      const count = filteredCSV.length
+      setVisiblePostersCount(count);
+      if (count < DEFAULT_COLUMN_COUNT) {
+        setColInput(count.toString())
+        setColCount(count)
+      } else {
+        setColInput(DEFAULT_COLUMN_COUNT.toString())
+        setColCount(DEFAULT_COLUMN_COUNT)
+      }
     }
+
     const canvas = canvasRef.current;
     if (canvas) {
       canvas.width = 0;
@@ -151,12 +151,19 @@ export const CollageBuilder = ({ csvData }) => {
 
     const canvas = canvasRef.current;
 
-    const missingApis = oMDbApi == null && iMDb8Api == null;
+    const missingApis = (oMDbApi == null && iMDb8Api == null) ||
+                        (oMDbApi.length == 0 && iMDb8Api.length == 0);
 
+    let errorMessage = "";
     if (selectedMonth === 'all')
-      alert('Please select a month to generate your monthly poster collage.');
+      errorMessage += "• Please select a month.\n";
+    if (missingApis)
+      errorMessage += "• Please enter at least one API key (OMDb or IMDb8).\n";
+    if (visiblePostersCount === 0)
+      errorMessage += "• No posters available to generate.\n";
 
-    if (selectedMonth === 'all' || missingApis || visiblePostersCount === 0) {
+    if (errorMessage) {
+      alert(errorMessage);
       canvas.width = 0;
       canvas.height = 0;
       return;
@@ -171,9 +178,9 @@ export const CollageBuilder = ({ csvData }) => {
     const posterWidth = 230
     const posterHeight = 345
     const gap = 15
-    const finalColumnCount = Math.min(columnCount, visiblePosters.length)
-    const standardWidth = posterWidth * finalColumnCount + gap * (finalColumnCount + 1);
-    const rowCount = Math.ceil((visiblePosters.length) / finalColumnCount);
+    const finalColCount = Math.min(colCount, visiblePosters.length)
+    const standardWidth = posterWidth * finalColCount + gap * (finalColCount + 1);
+    const rowCount = Math.ceil((visiblePosters.length) / finalColCount);
     const standardHeight = posterHeight * rowCount + gap * (rowCount + 1);
     let canvasWidth = standardWidth
     let canvasHeight = standardHeight
@@ -196,7 +203,7 @@ export const CollageBuilder = ({ csvData }) => {
     let row = 0
     let column = 0
     for (let i = 0; i < visiblePosters.length; i++) {
-      if (i != 0 && i%finalColumnCount == 0) {
+      if (i != 0 && i%finalColCount == 0) {
         row = row + 1
         column = 0
       }
@@ -359,11 +366,11 @@ export const CollageBuilder = ({ csvData }) => {
               </select>
             </div>
             <div id='column-counter' className='mr-4'>
-              <label htmlFor='columnCounter' className='text-nowrap'>Cols: </label>
+              <label htmlFor='colCounter' className='text-nowrap'>Cols: </label>
               <input
                 className='w-9 text-center'
                 type='number'
-                value={columnInput}
+                value={colInput}
                 onChange={handleColChange}
                 onBlur={handleColBlur}
                 min='1'
@@ -380,7 +387,9 @@ export const CollageBuilder = ({ csvData }) => {
           <div className='flex mt-4'>
             { isDisplayPosters ?
                 <Posters
+                  key={colCount}
                   posterListRef={posterListRef}
+                  colCount={colCount}
                   oMDbApi={oMDbApi}
                   iMDb8Api={iMDb8Api}
                   filteredCSV={filteredCSV}
