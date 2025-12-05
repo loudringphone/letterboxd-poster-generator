@@ -11,18 +11,32 @@ export const CsvUploader = ({ setCsvData }) => {
     if (file) {
       Papa.parse(file, {
         complete: (result) => {
-          setCsvData(result.data);
+          const data = result.data;
+          const expectedHeaders = ["Date", "Name", "Year"];
+          const parsedHeaders = Object.keys(data[0] || {});
+
+          const hasAllHeaders = expectedHeaders.every(h =>
+                                  parsedHeaders.includes(h)
+                                );
+
+          if (!hasAllHeaders) {
+            alert("This doesn't look like a Letterboxd diary.csv file.\nPlease double-check and try again.");
+            fileInputRef.current.value = null;
+            setCsvData(null);
+            return;
+          }
+
+          setCsvData(data);
         },
         header: true, // the CSV has a header row
+        skipEmptyLines: true
       });
     }
   };
 
   const handleClear = () => {
     setCsvData(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = null;
-    }
+    fileInputRef.current.value = null;
   };
 
   return (

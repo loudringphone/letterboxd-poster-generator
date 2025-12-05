@@ -1,12 +1,12 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ImageList } from './ImageList'
+import { ImageList } from './ImageList';
 import { Posters } from './Posters';
 import './poster.css';
 
 export const CollageBuilder = ({ csvData }) => {
-  const [filteredCSV, setFilteredCSV] = useState(csvData)
+  const [filteredCSV, setFilteredCSV] = useState(csvData);
   const [selectedMonth, setSelectedMonth] = useState('all');
   const [uniqueMonths, setUniqueMonths] = useState([]);
   const getMonthName = (monthIndex) => {
@@ -23,55 +23,69 @@ export const CollageBuilder = ({ csvData }) => {
     if (selectedMonth) {
       return monthYear === selectedMonth;
     } else {
-      return monthYear
-    }
-  }
+      return monthYear;
+    };
+  };
 
   useEffect(() => {
     if (csvData) {
-      setFilteredCSV(csvData)
+      setFilteredCSV(csvData);
       const months = Array.from(
         new Set(csvData.slice(0, -1).map((row) => {
-          return filterMonth(row)
+          return filterMonth(row);
         }))
       );
       setUniqueMonths(months);
       if (selectedMonth !== 'all') {
         const urls = Array(filteredCSV.length).fill(['']);
-        setPosterUrls(urls)
+        setPosterUrls(urls);
 
         setFilteredCSV(csvData.filter(((row) => {
-          return filterMonth(row, selectedMonth)
+          return filterMonth(row, selectedMonth);
         })))
       }
     } else {
-      setFilteredCSV(null)
+      setFilteredCSV(null);
       setUniqueMonths([]);
-      setSelectedMonth('all')
+      setSelectedMonth('all');
     }
   }, [csvData, selectedMonth]);
 
   const [visiblePostersCount, setVisiblePostersCount] = useState(0)
   useEffect(() => {
     if (filteredCSV) {
-      setVisiblePostersCount(filteredCSV.length)
+      setVisiblePostersCount(filteredCSV.length);
     }
-  }, [filteredCSV])
+  }, [filteredCSV]);
 
   const [columnCount, setColumnCount] = useState(4);
+  const [columnInput, setColumnInput] = useState("4");
   const posterListRef = useRef(null);
-  const handleColumnCountChange = (event) => {
+
+  const handleColChange = (event) => {
     let value = parseInt(event.target.value)
-    if (value > 9) {
-      value = 9
+
+    if (isNaN(value)) {
+      setColumnInput("");
+      return;
     }
+
+    if (value > 9) value = 9
     setColumnCount(value);
+    setColumnInput(value.toString());
   };
+
+  const handleColBlur = () => {
+    if (columnInput === "") {
+      setColumnInput(columnCount.toString());
+    };
+  };
+
+
   useEffect(() => {
-    if (posterListRef.current) {
+    if (posterListRef.current)
       posterListRef.current.style.gridTemplateColumns = `repeat(${columnCount}, 37.5px)`;
-    }
-  }, [columnCount])
+  }, [columnCount]);
 
 
   const oMDbApiRef = useRef(null);
@@ -82,7 +96,8 @@ export const CollageBuilder = ({ csvData }) => {
 
   const confirmAPIs = () => {
     if (isMassLoading) return
-    if (selectedMonth=='all') alert('Please select a month to generate your monthly poster collage.')
+    if (selectedMonth=='all')
+      alert('Please select a month to generate your monthly poster collage.')
 
     const oMDbApiVal = oMDbApiRef.current.value
     const iMDb8ApiVal = iMDb8ApiRef.current.value
@@ -136,11 +151,17 @@ export const CollageBuilder = ({ csvData }) => {
 
     const canvas = canvasRef.current;
 
-    if (selectedMonth == 'all' || (oMDbApi == null && iMDb8Api == null) || visiblePostersCount == 0) {
+    const missingApis = oMDbApi == null && iMDb8Api == null;
+
+    if (selectedMonth === 'all')
+      alert('Please select a month to generate your monthly poster collage.');
+
+    if (selectedMonth === 'all' || missingApis || visiblePostersCount === 0) {
       canvas.width = 0;
       canvas.height = 0;
-      return
+      return;
     }
+
     const posters = document.querySelectorAll('img.poster');
     const visiblePosters = Array.from(posters).filter(p => {
       return !p.classList.contains('grayscale');
@@ -310,7 +331,6 @@ export const CollageBuilder = ({ csvData }) => {
               <label htmlFor="OMDbApi">OMDb API: </label>
               <input
                 className='w-20'
-                type="password"
                 ref={oMDbApiRef}
                 disabled={isMassLoading}
                 onKeyDown={(e) => {if (e.key === "Enter") confirmAPIs()}}
@@ -320,7 +340,6 @@ export const CollageBuilder = ({ csvData }) => {
               <label htmlFor="IMDb8api" className='text-nowrap'>IMDb8 API: </label>
               <input
                 className='w-20'
-                type="password"
                 ref={iMDb8ApiRef}
                 disabled={isMassLoading}
                 onKeyDown={(e) => {if (e.key === "Enter") confirmAPIs()}}
@@ -344,8 +363,9 @@ export const CollageBuilder = ({ csvData }) => {
               <input
                 className='w-9 text-center'
                 type='number'
-                value={columnCount}
-                onChange={handleColumnCountChange}
+                value={columnInput}
+                onChange={handleColChange}
+                onBlur={handleColBlur}
                 min='1'
                 max='9'
               />
